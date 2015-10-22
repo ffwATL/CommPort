@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+   <user>
+       <firstName>Hans</firstName>
+       <lastName>Muster</lastName>
+   </user>
+    <user>
+        <firstName>Ruth</firstName>
+        <lastName>Mueller</lastName>
+    </user>
+    <user>
+        <firstName>Heinz</firstName>
+        <lastName>Kurz</lastName>
+    </user>
+    <user>
+        <firstName>Cornelia</firstName>
+        <lastName>Meyer</lastName>
+    </user>
+</Configuration>

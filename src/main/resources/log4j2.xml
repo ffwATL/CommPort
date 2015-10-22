@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <!--<ThresholdFilter level="trace"/>-->
+
+    <Appenders>
+        <RollingFile name="controllerAppender" fileName="C:\LOGS\controller.log" filePattern="C:\LOGS\controller-%d{MM-dd-yyyy}-%i.log">
+            <DefaultRolloverStrategy fileIndex="max" />
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100 KB"/>
+                <TimeBasedTriggeringPolicy interval="2"/>
+            </Policies>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5p %c{2} - %m%n"/>
+        </RollingFile>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="trace">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>
