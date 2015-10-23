@@ -13,15 +13,21 @@ public class CommTest  {
 
     private static Logger logger = LogManager.getLogger();
 
+    private GraphicsInterface gui;
+
+    public void setGui(GraphicsInterface gui){
+        this.gui = gui;
+    }
+
     public static void main(String[] args){
-        try
+       /* try
         {
             (new CommTest()).connect(DiscoveringComm.getPortName());
         }
         catch (Exception e)
         {
            logger.error("Exception is occurred.."+e.getMessage());
-        }
+        }*/
 
     }
 

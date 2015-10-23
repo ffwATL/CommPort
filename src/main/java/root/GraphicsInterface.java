@@ -2,93 +2,118 @@ package root;
 
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Text;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
-
 public class GraphicsInterface extends Application {
 
-    private Button button;
-    private BorderPane rootLayout;
     private Stage primaryStage;
     private static Logger logger = LogManager.getLogger();
-
-    Text sceneTitle = new Text("Welcome");
+    private String portName;
+    private TextArea textArea;
+    private static CommTest commTest;
 
 
     public static void main(String[] args){
-        launch();
+        launch(args);
     }
 
+    @Override
+    public void init(){
+        commTest = new CommTest();
+        commTest.setGui(this);
+    }
+
+    private void setWelcomeScene(){
+        Group root = new Group();
+        Scene scene = new Scene(root,400,300);
+        Button connectButton = new Button("Connect");
+        connectButton.setLayoutX(300);
+        connectButton.setLayoutY(280);
+        connectButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                setWorkScene();
+            }
+        });
+        ObservableList<String> portList = DiscoveringComm.getPortName();
+        if(portList.size()>0) portName = portList.get(0);
+        else {
+            connectButton.setDisable(true);
+            portName = "no device";
+            portList.add(portName);
+        }
+        ChoiceBox<String> choiceBox = new ChoiceBox<>(portList);
+        choiceBox.setLayoutX(20);
+        choiceBox.setLayoutY(20);
+        choiceBox.setTooltip(new Tooltip("Choose COM to connect"));
+        choiceBox.getSelectionModel().selectFirst();
+        choiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                portName = newValue;
+            }
+        });
+        root.getChildren().add(connectButton);
+        root.getChildren().add(choiceBox);
+        primaryStage.setScene(scene);
+
+    }
+    private void setWorkScene(){
+        Group root = new Group();
+        Scene scene = new Scene(root,400,300);
+        textArea = new TextArea();
+        textArea.setLayoutX(90);
+        textArea.setLayoutY(50);
+        textArea.setPrefSize(200, 100);
+        Button backButton = new Button("Back");
+        backButton.setLayoutX(300);
+        backButton.setLayoutY(280);
+        backButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                textArea = null;
+                setWelcomeScene();
+            }
+        });
+        TextField textField = new TextField();
+        textField.setPrefSize(200,5);
+        textField.setLayoutX(90);
+        textField.setLayoutY(280);
+        textField.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                textArea.appendText(textField.getText()+"\n");
+                textField.setText("");
+            }
+        });
+        root.getChildren().add(textArea);
+        root.getChildren().add(backButton);
+        root.getChildren().add(textField);
+        primaryStage.setScene(scene);
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Comm port test");
-        /*button = new Button("click me");
-        button.setOnAction(new ClickMeEventHandler());
-        StackPane layout = new StackPane();
-        layout.getChildren().add(button);
-
-        GridPane gridPane = new GridPane();
-        gridPane.setAlignment(Pos.CENTER);
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
-        gridPane.setPadding(new Insets(25, 25, 25, 25));
-
-        gridPane.add(sceneTitle,0,0);
-        gridPane.add(button,1,0);
-        Scene scene = new Scene(gridPane,300,250);
-        primaryStage.setScene(scene);
-        primaryStage.show();*/
-        initRootLayout();
-        showPersonOverview();
-
-    }
-    public void initRootLayout(){
-        try{
-            FXMLLoader loader = new FXMLLoader();
-            File file = new File("src/main/resources/fx/rootLayout.fxml");
-            loader.setLocation(file.toURI().toURL());
-            rootLayout = (BorderPane) loader.load();
-            Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        } catch (IOException e) {
-            logger.error("IOException is occurred: " + e.getMessage());
-        }
+        primaryStage.setWidth(400);
+        primaryStage.setHeight(350);
+        setWelcomeScene();
+        primaryStage.show();
     }
 
-    public void showPersonOverview(){
-        try{
-            FXMLLoader loader = new FXMLLoader();
-            File file = new File("src/main/resources/fx/gui.fxml");
-            loader.setLocation(file.toURI().toURL());
-            AnchorPane personOwerview = (AnchorPane) loader.load();
-            rootLayout.setCenter(personOwerview);
-        } catch (IOException e) {
-            logger.error("IOException is occurred: " + e.getMessage());
-        }
-    }
 
-    class ClickMeEventHandler implements EventHandler<ActionEvent>{
 
-        @Override
-        public void handle(ActionEvent event) {
-            if(event.getSource() == button){
-                sceneTitle.setText("hello");
-            }
-        }
-    }
+
+
 }
