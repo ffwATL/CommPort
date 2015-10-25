@@ -1,13 +1,13 @@
 package root.model;
 
 
-import javafx.application.Application;
+import root.view.Graphics;
 
-public interface Comm<T extends Application> {
+public interface Comm<T extends Graphics> {
 
     public void setGui(T gui);
 
-    public boolean connect(String portName);
+    public boolean connect(String portName, Integer baudRate);
 
     public void write(String  b);
 

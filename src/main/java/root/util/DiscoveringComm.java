@@ -24,4 +24,20 @@ public final class DiscoveringComm {
         }
         return portList;
     }
+
+    public static ObservableList<Integer> getBaudRateList(){
+        ObservableList<Integer> baudRateList = FXCollections.observableArrayList();
+        baudRateList.add(1200);
+        baudRateList.add(2400);
+        baudRateList.add(4800);
+        baudRateList.add(9600);
+        baudRateList.add(14400);
+        baudRateList.add(19200);
+        baudRateList.add(28800);
+        baudRateList.add(38400);
+        baudRateList.add(57600);
+        baudRateList.add(115200);
+        baudRateList.add(230400);
+        return baudRateList;
+    }
 }

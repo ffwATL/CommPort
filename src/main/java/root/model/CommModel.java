@@ -4,22 +4,23 @@ import gnu.io.*;
 import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import root.view.GraphicsInterface;
+import root.view.Graphics;
+
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.TooManyListenersException;
 
-public class CommModel implements Comm<GraphicsInterface> {
+public class CommModel implements Comm<Graphics> {
 
     private static Logger logger = LogManager.getLogger();
     private OutputStream outputStream;
-    private GraphicsInterface gui;
+    private Graphics gui;
     private SerialPort serialPort;
     private SerialReader serialReader;
     private InputStream inputStream;
-    private static Comm<GraphicsInterface> comm;
+    private static Comm<Graphics> comm;
 
     private CommModel(){
     }
@@ -30,18 +31,18 @@ public class CommModel implements Comm<GraphicsInterface> {
     }
 
     @Override
-    public void setGui(GraphicsInterface gui) {
+    public void setGui(Graphics gui) {
         this.gui = gui;
     }
 
     @Override
-    public boolean connect(String portName){
+    public boolean connect(String portName, Integer baudRate){
         try {
             CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
             CommPort commPort = portIdentifier.open(this.getClass().getName(), 2000);
             if(commPort instanceof SerialPort){
                 serialPort = (SerialPort) commPort;
-                serialPort.setSerialPortParams(9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+                serialPort.setSerialPortParams(baudRate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
                 serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
                 inputStream = serialPort.getInputStream();
                 outputStream = serialPort.getOutputStream();

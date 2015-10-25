@@ -19,7 +19,7 @@ import root.model.Comm;
 import root.model.CommModel;
 import root.util.DiscoveringComm;
 
-public class GraphicsInterface extends Application {
+public class GraphicsInterface extends Application implements Graphics {
 
     private Stage primaryStage;
     private static Logger logger = LogManager.getLogger();
@@ -72,7 +72,7 @@ public class GraphicsInterface extends Application {
         }
     }
 
-    private void scanPorts(Button connectButton, ChoiceBox choiceBox){
+    private void scanPorts(Button connectButton, ComboBox choiceBox){
         ObservableList<String> portList = DiscoveringComm.getPortName();
         if(portList.size() > 0) {
             connectButton.setDisable(false);
@@ -96,7 +96,7 @@ public class GraphicsInterface extends Application {
         connectButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (commModel.connect(portName)) {
+                if (commModel.connect(portName, 9600)) {
                     connect = true;
                     setWorkScene();
                 }
@@ -104,7 +104,7 @@ public class GraphicsInterface extends Application {
         });
         connectButton.setTooltip(new Tooltip("Make a connect to the selected COM"));
         Button scanButton = new Button("Scan");
-        ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        ComboBox<String> choiceBox = new ComboBox<>();
         scanButton.setTooltip(new Tooltip("Scan for available ports"));
         scanButton.setLayoutX(40);
         scanButton.setLayoutY(100);
@@ -176,13 +176,4 @@ public class GraphicsInterface extends Application {
         root.getChildren().add(clearButton);
         primaryStage.setScene(scene);
     }
-
-
-
-
-
-
-
-
-
 }
