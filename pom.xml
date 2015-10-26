@@ -12,13 +12,11 @@
           <groupId>commons-codec</groupId>
           <artifactId>commons-codec</artifactId>
           <version>1.9</version>
-          <scope>provided</scope>
       </dependency>
       <dependency>
       <groupId>xml-apis</groupId>
       <artifactId>xml-apis</artifactId>
       <version>1.4.01</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -30,19 +28,16 @@
           <groupId>org.bidib.jbidib.org.qbang.rxtx</groupId>
           <artifactId>rxtxcomm</artifactId>
           <version>2.2</version>
-          <scope>provided</scope>
       </dependency>
       <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
       <version>2.4</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
       <version>2.4</version>
-        <scope>provided</scope>
     </dependency>
   </dependencies>
   <build>
@@ -50,16 +45,35 @@
       <plugins>
           <plugin>
               <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-jar-plugin</artifactId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <version>3.3</version>
               <configuration>
-                  <archive>
-                      <manifest>
-                          <addClasspath>true</addClasspath>
-                          <mainClass>root.view.SceneView</mainClass>
-                      </manifest>
-                  </archive>
+                  <source>1.8</source>
+                  <target>1.8</target>
               </configuration>
           </plugin>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-shade-plugin</artifactId>
+              <configuration>
+                  <shadedArtifactAttached>true</shadedArtifactAttached>
+                  <transformers>
+                      <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                          <mainClass>root.view.SceneView</mainClass>
+                      </transformer>
+                  </transformers>
+              </configuration>
+              <executions>
+                  <execution>
+                      <id>shade</id>
+                      <!--phase>package</phase--> <!-- default -->
+                      <goals>
+                          <goal>shade</goal>
+                      </goals>
+                  </execution>
+              </executions>
+          </plugin>
+
       </plugins>
   </build>
 </project>
