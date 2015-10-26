@@ -11,7 +11,11 @@ import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TooManyListenersException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class CommModel implements Comm<Graphics> {
 
@@ -22,6 +26,7 @@ public class CommModel implements Comm<Graphics> {
     private SerialReader serialReader;
     private InputStream inputStream;
     private static Comm<Graphics> comm;
+    private Timer timer;
 
     private CommModel(){
     }
@@ -113,6 +118,25 @@ public class CommModel implements Comm<Graphics> {
                 });
             }
         }).start();
+    }
+
+    public void executeCommand(String send, int delay, int period){
+        Executor executor = Executors.newCachedThreadPool();
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                executor.execute(new Runnable() {
+                    public void run() {
+                        write(send);
+                    }
+                });
+            }
+        }, delay, period);
+    }
+
+    public void stopExecutingCommand(){
+        if(timer != null) timer.cancel();
+
     }
 
     class SerialReader implements SerialPortEventListener {

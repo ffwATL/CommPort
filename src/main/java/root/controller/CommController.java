@@ -46,6 +46,8 @@ public class CommController implements Initializable, Graphics {
     private Button clearButton;
     @FXML
     private Label connectStatusLabel;
+    @FXML
+    private ComboBox<String> timeConfigBox;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -58,6 +60,7 @@ public class CommController implements Initializable, Graphics {
                 portName = s2;
             }
         });
+        /*timeConfigBox.setItems();*/
         baudRateBox.setItems(DiscoveringComm.getBaudRateList());
         baudRateBox.getSelectionModel().select(3);
         initTooltips();

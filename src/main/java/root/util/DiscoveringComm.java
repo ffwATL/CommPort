@@ -6,6 +6,9 @@ import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class DiscoveringComm {
 
     private DiscoveringComm(){};
@@ -39,5 +42,12 @@ public final class DiscoveringComm {
         baudRateList.add(115200);
         baudRateList.add(230400);
         return baudRateList;
+    }
+
+    public static List<TimeSetConfig> getTimeConfigMap(){
+        List<TimeSetConfig> list = new ArrayList<>();
+        list.add(new TimeSetConfig("Milliseconds", 1));
+        list.add(new TimeSetConfig("Seconds", 1000));
+        return list;
     }
 }

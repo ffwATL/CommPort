@@ -48,7 +48,7 @@
          <right>
             <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <TextField layoutX="114.0" layoutY="25.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="50.0" />
+                  <TextField layoutX="126.0" layoutY="27.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="50.0" />
                   <ToggleButton layoutX="14.0" layoutY="24.0" mnemonicParsing="false" text="Set timer" />
                   <ComboBox layoutX="14.0" layoutY="71.0" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0">
                      <effect>
@@ -58,6 +58,7 @@
                   <ToggleButton layoutX="117.0" layoutY="71.0" mnemonicParsing="false" text="1" textFill="#860000" />
                   <ToggleButton layoutX="140.0" layoutY="71.0" mnemonicParsing="false" text="2" textFill="#860000" />
                   <ToggleButton layoutX="163.0" layoutY="71.0" mnemonicParsing="false" text="3" textFill="#860000" />
+                  <Button layoutX="131.0" layoutY="117.0" mnemonicParsing="false" text="Start" />
                </children>
             </Pane>
          </right>
