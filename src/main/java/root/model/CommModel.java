@@ -5,6 +5,7 @@ import gnu.io.*;
 import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import root.util.CommUtil;
 import root.view.Graphics;
 
 import javax.xml.bind.DatatypeConverter;
@@ -74,6 +75,7 @@ public class CommModel implements Comm<Graphics> {
 
     @Override
     public void write(String  b){
+        logger.trace("starting conversion..");
         byte [] arr = {Byte.valueOf(b)};
         String hex = DatatypeConverter.printHexBinary(arr);
         try {
@@ -96,6 +98,7 @@ public class CommModel implements Comm<Graphics> {
             }
             serialPort.removeEventListener();
             serialPort.close();
+            stopExecutingCommand();
             serialPort = null;
         }
     }
@@ -110,7 +113,6 @@ public class CommModel implements Comm<Graphics> {
                         for (int i = 0; i < end; i++){
                             gui.updateTerminal(String.valueOf(input[i]) + " ");
                             if(i + 1 == end){
-                                logger.trace("getting new line.. " + i);
                                 gui.updateTerminal("\n");
                             }
                         }
@@ -120,7 +122,11 @@ public class CommModel implements Comm<Graphics> {
         }).start();
     }
 
-    public void executeCommand(String send, int delay, int period){
+    @Override
+    public void executeCommand(String send, long delay, long period, String factor){
+        int f = CommUtil.getInstance().getTimeConfigMap().get(factor);
+        delay *= f;
+        period = delay;
         Executor executor = Executors.newCachedThreadPool();
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -128,21 +134,25 @@ public class CommModel implements Comm<Graphics> {
                 executor.execute(new Runnable() {
                     public void run() {
                         write(send);
+                        logger.trace("inside executor");
                     }
                 });
             }
         }, delay, period);
     }
 
+    @Override
     public void stopExecutingCommand(){
-        if(timer != null) timer.cancel();
-
+        if(timer != null) {
+            timer.cancel();
+        }
     }
 
     class SerialReader implements SerialPortEventListener {
 
         @Override
         public void serialEvent(SerialPortEvent serialPortEvent) {
+            logger.trace("have a new mail");
             byte [] buffer = new byte[7];
             int len = 0;
             try {
@@ -151,6 +161,7 @@ public class CommModel implements Comm<Graphics> {
             } catch (IOException e){
                 logger.error("IOException is occurred: " + e.getMessage());
             }
+            logger.trace("finished reading from buffer");
             changeUI(buffer, len);
         }
     }

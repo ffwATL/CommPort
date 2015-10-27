@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.apache.logging.log4j.LogManager;
@@ -24,11 +25,20 @@ import java.util.ResourceBundle;
 
 public class CommController implements Initializable, Graphics {
 
-    private String portName = "no device";
-    private static Comm commModel;
-    private boolean connect;
     private static final Logger logger = LogManager.getLogger();
+    private static final String FIRST = "1";
+    private static final String SECOND = "2";
+    private static final String THIRD = "3";
+    private static final String DEFAULT = FIRST;
+    private static final long DEFAULT_DELAY = 100;
+
+    private static Comm commModel;
     private static CommUtilAbstract commUtil = CommUtil.getInstance();
+    private static long delay = DEFAULT_DELAY;
+    private static String command = DEFAULT;
+
+    private boolean connect;
+    private String portName = "no device";
 
     @FXML
     private ComboBox<String> commPortBox;
@@ -61,7 +71,7 @@ public class CommController implements Initializable, Graphics {
     @FXML
     private ToggleButton  thirdCommandButton;
     @FXML
-    private Button startButton;
+    private ToggleButton startButton;
 
 
     @Override
@@ -76,21 +86,9 @@ public class CommController implements Initializable, Graphics {
 
     @Override
     public void updateTerminal(String s){
-        logger.trace("appending: " + s);
+        logger.trace("appending.. ");
         textArea.appendText(s);
-    }
-
-    private void comboBoxInitialization(){
-        commPortBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observableValue, String s, String s2) {
-                portName = s2;
-            }
-        });
-        timeConfigBox.setItems(commUtil.getTimeConfigList());
-        timeConfigBox.getSelectionModel().selectFirst();
-        baudRateBox.setItems(commUtil.getBaudRateList());
-        baudRateBox.getSelectionModel().select(3);
+        logger.trace("finished appending ");
     }
 
     public void scanPorts(){
@@ -124,6 +122,19 @@ public class CommController implements Initializable, Graphics {
         textArea.setText("");
     }
 
+    private void comboBoxInitialization(){
+        commPortBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String s2) {
+                portName = s2;
+            }
+        });
+        timeConfigBox.setItems(commUtil.getTimeConfigList());
+        timeConfigBox.getSelectionModel().selectFirst();
+        baudRateBox.setItems(commUtil.getBaudRateList());
+        baudRateBox.getSelectionModel().select(3);
+    }
+
     private void changeLeftPaneState(boolean state){
         inputTextField.setDisable(!state);
         commPortBox.setDisable(state);
@@ -155,6 +166,92 @@ public class CommController implements Initializable, Graphics {
         thirdCommandButton.setDisable(state);
         timeConfigBox.setDisable(state);
         timerTextField.setDisable(state);
+        startButton.setDisable(true);
+        setTimerButton.setSelected(state);
+        firstCommandButton.setSelected(state);
+        secondCommandButton.setSelected(state);
+        thirdCommandButton.setSelected(state);
+        if(state){
+            firstCommandButton.setTextFill(Color.web("#860000"));
+            secondCommandButton.setTextFill(Color.web("#860000"));
+            thirdCommandButton.setTextFill(Color.web("#860000"));
+        }
+    }
+
+    private void scanCommand(){
+        if(firstCommandButton.isSelected()) command = FIRST;
+        else if(secondCommandButton.isSelected()) command = SECOND;
+        else if(thirdCommandButton.isSelected()) command = THIRD;
+        else {
+            firstCommandButton.setSelected(true);
+            command = DEFAULT;
+        }
+    }
+
+    @FXML
+    private void startButtonHandler(ActionEvent event){
+        if(!startButton.isSelected()){
+            commModel.stopExecutingCommand();
+            startButton.setText("Start");
+        }else{
+            scanCommand();
+            commModel.executeCommand(command, delay, delay, timeConfigBox.getValue());
+            // call executor.start();
+            startButton.setText("Stop");
+        }
+    }
+    @FXML
+    private void setTimerHandler(ActionEvent event){
+        String delayString = timerTextField.getText();
+        if(setTimerButton.isSelected()){
+            startButton.setDisable(false);
+            timeConfigBox.setDisable(true);
+            timerTextField.setDisable(true);
+            if(delayString.length() > 0) delay = new Long(delayString);
+            else {
+                delay = DEFAULT_DELAY;
+                timerTextField.setText(String.valueOf(DEFAULT_DELAY));
+            }
+        }else{
+            timerTextField.setDisable(false);
+            startButton.setDisable(true);
+            timeConfigBox.setDisable(false);
+        }
+    }
+
+    @FXML
+    private void validateTextInput(KeyEvent event){
+        try{
+            Long l = new Long(timerTextField.getText());
+        }catch (NumberFormatException e){
+            logger.trace("trying to handle exception.. ");
+            timerTextField.deletePreviousChar();
+        }catch (Exception e){
+            logger.trace("something goes wrong: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void toggleCommandButtonHandler(ActionEvent event){
+        if(event.getSource() == firstCommandButton){
+            secondCommandButton.setSelected(false);
+            thirdCommandButton.setSelected(false);
+            firstCommandButton.textFillProperty().setValue(Color.GREEN);
+            secondCommandButton.textFillProperty().setValue(Color.web("#860000"));
+            thirdCommandButton.textFillProperty().setValue(Color.web("#860000"));
+        }else if(event.getSource() == secondCommandButton){
+            firstCommandButton.setSelected(false);
+            thirdCommandButton.setSelected(false);
+            secondCommandButton.textFillProperty().setValue(Color.GREEN);
+            firstCommandButton.textFillProperty().setValue(Color.web("#860000"));
+            thirdCommandButton.textFillProperty().setValue(Color.web("#860000"));
+        }else if(event.getSource() == thirdCommandButton){
+            firstCommandButton.setSelected(false);
+            secondCommandButton.setSelected(false);
+            thirdCommandButton.textFillProperty().setValue(Color.GREEN);
+            secondCommandButton.textFillProperty().setValue(Color.web("#860000"));
+            firstCommandButton.textFillProperty().setValue(Color.web("#860000"));
+        }
     }
 
     private void initTooltips(){

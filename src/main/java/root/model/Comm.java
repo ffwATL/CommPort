@@ -12,4 +12,8 @@ public interface Comm<T extends Graphics> {
     public void write(String  b);
 
     public void close();
+
+    public void executeCommand(String send, long delay, long period, String factor);
+
+    public void stopExecutingCommand();
 }

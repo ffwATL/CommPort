@@ -48,17 +48,20 @@
          <right>
             <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <TextField fx:id="timerTextField" disable="true" layoutX="126.0" layoutY="27.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="50.0" />
-                  <ToggleButton fx:id="setTimerButton" disable="true" layoutX="5.0" layoutY="24.0" mnemonicParsing="false" text="Set timer" />
-                  <ComboBox fx:id="timeConfigBox" disable="true" layoutX="5.0" layoutY="71.0" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="108.0">
+                  <TextField fx:id="timerTextField" disable="true" layoutX="11.0" layoutY="28.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyReleased="#validateTextInput" prefHeight="20.0" prefWidth="50.0" promptText="delay" text="100">
+                     <font>
+                        <Font size="10.0" />
+                     </font></TextField>
+                  <ToggleButton fx:id="setTimerButton" disable="true" layoutX="124.0" layoutY="75.0" mnemonicParsing="false" onAction="#setTimerHandler" text="Set timer" />
+                  <ToggleButton fx:id="firstCommandButton" disable="true" layoutX="11.0" layoutY="75.0" mnemonicParsing="false" onAction="#toggleCommandButtonHandler" text="1" textFill="#860000" />
+                  <ToggleButton fx:id="secondCommandButton" disable="true" layoutX="37.0" layoutY="75.0" mnemonicParsing="false" onAction="#toggleCommandButtonHandler" text="2" textFill="#860000" />
+                  <ToggleButton fx:id="thirdCommandButton" disable="true" layoutX="63.0" layoutY="75.0" mnemonicParsing="false" onAction="#toggleCommandButtonHandler" text="3" textFill="#860000" />
+                  <ToggleButton fx:id="startButton" disable="true" layoutX="80.0" layoutY="129.0" mnemonicParsing="false" onAction="#startButtonHandler" text="Start" />
+                  <ComboBox fx:id="timeConfigBox" disable="true" layoutX="80.0" layoutY="24.0" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="108.0">
                      <effect>
                         <Bloom threshold="0.91" />
                      </effect>
                   </ComboBox>
-                  <ToggleButton fx:id="firstCommandButton" disable="true" layoutX="117.0" layoutY="71.0" mnemonicParsing="false" text="1" textFill="#860000" />
-                  <ToggleButton fx:id="secondCommandButton" disable="true" layoutX="140.0" layoutY="71.0" mnemonicParsing="false" text="2" textFill="#860000" />
-                  <ToggleButton fx:id="thirdCommandButton" disable="true" layoutX="163.0" layoutY="71.0" mnemonicParsing="false" text="3" textFill="#860000" />
-                  <Button fx:id="startButton" disable="true" layoutX="131.0" layoutY="117.0" mnemonicParsing="false" text="Start" />
                </children>
             </Pane>
          </right>
