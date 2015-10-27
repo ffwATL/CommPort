@@ -1,10 +1,11 @@
-package root.model;
+package root.model.recentVersion;
 
 
 import gnu.io.*;
 import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import root.model.Comm;
 import root.util.CommUtil;
 import root.view.Graphics;
 
@@ -18,7 +19,7 @@ import java.util.TooManyListenersException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class CommModel implements Comm<Graphics> {
+public class CommModel_readln implements Comm<Graphics> {
 
     private static Logger logger = LogManager.getLogger();
     private OutputStream outputStream;
@@ -29,11 +30,11 @@ public class CommModel implements Comm<Graphics> {
     private static Comm<Graphics> comm;
     private Timer timer;
 
-    private CommModel(){
+    private CommModel_readln(){
     }
 
     public static Comm getInstance(){
-        if(comm == null) comm = new CommModel();
+        if(comm == null) comm = new CommModel_readln();
         return comm;
     }
 
@@ -51,7 +52,7 @@ public class CommModel implements Comm<Graphics> {
                 serialPort = (SerialPort) commPort;
                 serialPort.setSerialPortParams(baudRate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
                 serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
-                if(inputStream == null) inputStream = serialPort.getInputStream();
+                inputStream = serialPort.getInputStream();
                 outputStream = serialPort.getOutputStream();
                 serialReader = new SerialReader();
                 serialPort.addEventListener(serialReader);
@@ -92,6 +93,7 @@ public class CommModel implements Comm<Graphics> {
             try {
                 outputStream.flush();
                 outputStream.close();
+                inputStream.close();
             }catch (IOException e){
                 logger.error("Some problem with closing connection ='\'"+e.getMessage());
             }
@@ -154,19 +156,14 @@ public class CommModel implements Comm<Graphics> {
             logger.trace("have a new mail");
             byte [] buffer = new byte[7];
             int len = 0;
-            int data = 0;
             try {
-                while (true){
-                    data = inputStream.read(buffer);
-                    if(data == -1) break;
-                    if(data > 0){
-                        changeUI(buffer, data);
-                    }
-                }
-
+                while ((buffer[len++] = (byte) inputStream.read()) > -1);
+                len-=1;
             } catch (IOException e){
                 logger.error("IOException is occurred: " + e.getMessage());
             }
+            logger.trace("finished reading from buffer");
+            changeUI(buffer, len);
         }
     }
 }
