@@ -14,7 +14,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import root.model.Comm;
 import root.model.CommModel;
-import root.util.DiscoveringComm;
+import root.util.CommUtil;
+import root.util.CommUtilAbstract;
 import root.view.Graphics;
 
 import java.net.URL;
@@ -26,7 +27,8 @@ public class CommController implements Initializable, Graphics {
     private String portName = "no device";
     private static Comm commModel;
     private boolean connect;
-    private static Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
+    private static CommUtilAbstract commUtil = CommUtil.getInstance();
 
     @FXML
     private ComboBox<String> commPortBox;
@@ -48,34 +50,51 @@ public class CommController implements Initializable, Graphics {
     private Label connectStatusLabel;
     @FXML
     private ComboBox<String> timeConfigBox;
+    @FXML
+    private ToggleButton setTimerButton;
+    @FXML
+    private TextField timerTextField;
+    @FXML
+    private ToggleButton  firstCommandButton;
+    @FXML
+    private ToggleButton  secondCommandButton;
+    @FXML
+    private ToggleButton  thirdCommandButton;
+    @FXML
+    private Button startButton;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         commModel = CommModel.getInstance();
         commModel.setGui(this);
         scanPorts();
+        comboBoxInitialization();
+        initTooltips();
+    }
+
+
+    @Override
+    public void updateTerminal(String s){
+        logger.trace("appending: " + s);
+        textArea.appendText(s);
+    }
+
+    private void comboBoxInitialization(){
         commPortBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String s2) {
                 portName = s2;
             }
         });
-        /*timeConfigBox.setItems();*/
-        baudRateBox.setItems(DiscoveringComm.getBaudRateList());
+        timeConfigBox.setItems(commUtil.getTimeConfigList());
+        timeConfigBox.getSelectionModel().selectFirst();
+        baudRateBox.setItems(commUtil.getBaudRateList());
         baudRateBox.getSelectionModel().select(3);
-        initTooltips();
-
-    }
-
-
-    @Override
-    public void updateTerminal(String s){
-        logger.trace("appending: "+ s);
-        textArea.appendText(s);
     }
 
     public void scanPorts(){
-        ObservableList<String> portList = DiscoveringComm.getPortName();
+        ObservableList<String> portList = commUtil.getPortName();
         if(portList.size() > 0) {
             connectButton.setDisable(false);
             baudRateBox.setDisable(false);
@@ -110,6 +129,7 @@ public class CommController implements Initializable, Graphics {
         commPortBox.setDisable(state);
         baudRateBox.setDisable(state);
         scanButton.setDisable(state);
+        changeRightPaneState(!state);
         if(state) {
             connectButton.setTooltip(new Tooltip("Close a connection"));
             connectButton.setText("Disconnect");
@@ -126,6 +146,15 @@ public class CommController implements Initializable, Graphics {
             connectStatusLabel.setTextFill(Color.RED);
         }
         connect = state;
+    }
+
+    private void changeRightPaneState(boolean state){
+        setTimerButton.setDisable(state);
+        secondCommandButton.setDisable(state);
+        firstCommandButton.setDisable(state);
+        thirdCommandButton.setDisable(state);
+        timeConfigBox.setDisable(state);
+        timerTextField.setDisable(state);
     }
 
     private void initTooltips(){
