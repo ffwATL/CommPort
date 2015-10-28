@@ -25,8 +25,8 @@ public class SceneView extends Application {
         Parent root = FXMLLoader.load(new File("src/main/java/root/controller/scene.fxml").toURI().toURL()); //for testing with IDEA
         /*AnchorPane root = (AnchorPane) FXMLLoader.load(SceneView.class.getResource("fxml/scene.fxml")); //for deployment*/
         Scene scene = new Scene(root);
-        Image ico = new Image("file:src/main/resources/icon.png");
-        /*Image ico = new Image(this.getClass().getResource("fxml/icon.png").toExternalForm());*/ //for deployment
+        Image ico = new Image("file:src/main/resources/ico.ico");
+       /* Image ico = new Image(this.getClass().getResource("fxml/ico.ico").toExternalForm()); //for deployment*/
         primaryStage.getIcons().add(ico);
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override

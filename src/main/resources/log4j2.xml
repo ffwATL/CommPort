@@ -3,7 +3,7 @@
     <!--<ThresholdFilter level="trace"/>-->
 
     <Appenders>
-        <RollingFile name="controllerAppender" fileName="C:\LOGS\controller.log" filePattern="C:\LOGS\controller-%d{MM-dd-yyyy}-%i.log">
+        <RollingFile name="rootFileAppender" fileName="LOGS\root.log" filePattern="LOGS\root-%d{MM-dd-yyyy}-%i.log">
             <DefaultRolloverStrategy fileIndex="max" />
             <Policies>
                 <SizeBasedTriggeringPolicy size="100 KB"/>
@@ -17,7 +17,7 @@
     </Appenders>
     <Loggers>
         <Root level="trace">
-            <AppenderRef ref="Console"/>
+            <AppenderRef ref="rootFileAppender"/>
         </Root>
     </Loggers>
 </Configuration>
