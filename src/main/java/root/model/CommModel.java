@@ -9,8 +9,8 @@ import root.util.CommUtil;
 import root.view.Graphics;
 
 import javax.xml.bind.DatatypeConverter;
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -25,7 +25,7 @@ public class CommModel implements Comm<Graphics> {
     private Graphics gui;
     private SerialPort serialPort;
     private SerialReader serialReader;
-    private InputStream inputStream;
+    private BufferedInputStream inputStream;
     private static Comm<Graphics> comm;
     private Timer timer;
     private static String nothing;
@@ -52,7 +52,7 @@ public class CommModel implements Comm<Graphics> {
                 serialPort = (SerialPort) commPort;
                 serialPort.setSerialPortParams(baudRate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
                 serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
-                if(inputStream == null) inputStream = serialPort.getInputStream();
+                if(inputStream == null) inputStream = new BufferedInputStream(serialPort.getInputStream());
                 outputStream = serialPort.getOutputStream();
                 serialReader = new SerialReader();
                 serialPort.addEventListener(serialReader);
@@ -112,10 +112,8 @@ public class CommModel implements Comm<Graphics> {
                     public void run() {
                         for (int i = 0; i < end; i++){
                             gui.updateTerminal(String.valueOf(input[i]) + " ");
-                            if(i + 1 == end){
-                                gui.updateTerminal("\n");
-                            }
                         }
+                        gui.updateTerminal("\n");
                     }
                 });
             }
@@ -153,8 +151,7 @@ public class CommModel implements Comm<Graphics> {
         @Override
         public void serialEvent(SerialPortEvent serialPortEvent) {
             logger.trace("have a new mail");
-            byte [] buffer = new byte[7];
-            int len = 0;
+            byte [] buffer = new byte[32];
             int data = 0;
             try {
                 while (true){
@@ -164,7 +161,6 @@ public class CommModel implements Comm<Graphics> {
                         changeUI(buffer, data);
                     }
                 }
-
             } catch (IOException e){
                 logger.error("IOException is occurred: " + e.getMessage());
             }
