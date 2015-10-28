@@ -28,6 +28,7 @@ public class CommModel implements Comm<Graphics> {
     private InputStream inputStream;
     private static Comm<Graphics> comm;
     private Timer timer;
+    private static String nothing;
 
     private CommModel(){
     }
