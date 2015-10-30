@@ -14,7 +14,7 @@ public final class CommUtil extends CommUtilAbstract {
     private Map<String, Integer> timeConfigMap;
     private static ObservableList<Integer> baudRateList;
     private static CommUtil commUtil;
-    private static Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
 
     private CommUtil(){
     }
@@ -70,9 +70,4 @@ public final class CommUtil extends CommUtilAbstract {
         }
         return portList;
     }
-
-
-
-
-
 }

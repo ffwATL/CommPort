@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 
 public class CommModel implements Comm<Graphics> {
 
-    private static Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
     private OutputStream outputStream;
     private Graphics gui;
     private SerialPort serialPort;
