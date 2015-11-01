@@ -21,21 +21,21 @@ import java.util.concurrent.Executors;
 public class CommModel implements Comm<Graphics> {
 
     private static final Logger logger = LogManager.getLogger();
+    private static Comm<Graphics> comm;
+
     private OutputStream outputStream;
     private Graphics gui;
     private SerialPort serialPort;
     private SerialReader serialReader;
     private BufferedInputStream inputStream;
-    private static Comm<Graphics> comm;
     private Timer timer;
-    private static String nothing;
+
 
     private CommModel(){
     }
 
     public static Comm getInstance(){
-        if(comm == null) comm = new CommModel();
-        return comm;
+        return comm == null ? comm = new CommModel() : comm;
     }
 
     @Override
@@ -152,7 +152,7 @@ public class CommModel implements Comm<Graphics> {
         public void serialEvent(SerialPortEvent serialPortEvent) {
             logger.trace("have a new mail");
             byte [] buffer = new byte[32];
-            int data = 0;
+            int data;
             try {
                 while (true){
                     data = inputStream.read(buffer);

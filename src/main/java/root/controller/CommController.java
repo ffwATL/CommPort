@@ -39,7 +39,6 @@ public class CommController implements Initializable, Graphics {
 
     private boolean connect;
     private String portName = "no device";
-
     @FXML
     private ComboBox<String> commPortBox;
     @FXML
@@ -82,7 +81,6 @@ public class CommController implements Initializable, Graphics {
         comboBoxInitialization();
         initTooltips();
     }
-
 
     @Override
     public void updateTerminal(String s){
@@ -261,7 +259,4 @@ public class CommController implements Initializable, Graphics {
         clearButton.setTooltip(new Tooltip("Clear console"));
         connectButton.setTooltip(new Tooltip("Make a connection to selected COM"));
     }
-
-
-
 }
