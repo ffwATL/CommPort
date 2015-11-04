@@ -101,6 +101,7 @@ public class CommModel implements Comm<Graphics> {
             serialPort.close();
             stopExecutingCommand();
             serialPort = null;
+            inputStream = null;
         }
     }
 
@@ -171,6 +172,9 @@ public class CommModel implements Comm<Graphics> {
                     if(data > 0){
                         changeUI(Calculating.getPosition(buffer, data));
                         /*logger.trace("data = " + data);*/
+                      /*  for(int i=0; i<data; i++){
+                            logger.trace(buffer[i]);
+                        }*/
                     }
                     break;
                 }
