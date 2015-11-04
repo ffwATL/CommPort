@@ -103,15 +103,25 @@ public class CommModel implements Comm<Graphics> {
         }
     }
 
-    private void changeUI(byte [] input, int end){
+    private static long[] parseSixByteArray(byte[] arr, int data) throws Exception {
+        if (data % 3 != 0 || arr.length < data) throw new Exception("wrong array length given: "+ arr.length);
+        long[] res = new long[data / 3];
+        int c = 0;
+        for (int i = 0; i < data; i += 3){
+            res[c++] = (arr[i] * 256 + arr[i + 1]) * 256 + arr[i + 2];
+        }
+        return res;
+    }
+
+    private void changeUI(double[] input){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        for (int i = 0; i < end; i++){
-                            gui.updateTerminal(String.valueOf(input[i]) + " ");
+                        for (int i = 0; i < input.length; i++){
+                            gui.updateTerminal(String.valueOf(input[i]) + " - ");
                         }
                         gui.updateTerminal("\n");
                     }
@@ -147,7 +157,6 @@ public class CommModel implements Comm<Graphics> {
     }
 
     class SerialReader implements SerialPortEventListener {
-
         @Override
         public void serialEvent(SerialPortEvent serialPortEvent) {
             logger.trace("have a new mail");
@@ -158,11 +167,14 @@ public class CommModel implements Comm<Graphics> {
                     data = inputStream.read(buffer);
                     if(data == -1) break;
                     if(data > 0){
-                        changeUI(buffer, data);
+                        logger.trace("data commModel= "+data);
+                        changeUI(Calculating.getPosition(buffer, data));
                     }
                 }
             } catch (IOException e){
                 logger.error("IOException is occurred: " + e.getMessage());
+            } catch (Exception e) {
+                logger.error(e.getMessage());
             }
         }
     }
