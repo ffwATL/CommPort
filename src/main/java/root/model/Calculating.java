@@ -14,18 +14,21 @@ public class Calculating {
         if (arr.length < data) throw new Exception("wrong array length given: "+ arr.length);
         long[] res;
         if(data == 6){
+            logger.trace("data = 6");
             res = new long[data / 3];
             int c = 0;
             for (int i = 0; i < data; i += 3){
                 res[c++] = (arr[i] * 256 + arr[i + 1]) * 256 + arr[i + 2];
             }
         }else if(data == 2){
+            logger.trace("data = 2");
             res = new long[data / 2];
             int c = 0;
             for (int i = 0; i < data; i += 2){
                 res[c++] = (arr[i] * 256 + arr[i + 1]) * 256;
             }
         }else {
+            logger.trace("data = 1");
             res = new long[1];
             res[0] = arr[0];
         }

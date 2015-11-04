@@ -30,7 +30,6 @@ public class CommModel implements Comm<Graphics> {
     private BufferedInputStream inputStream;
     private Timer timer;
 
-
     private CommModel(){
     }
 
@@ -57,6 +56,8 @@ public class CommModel implements Comm<Graphics> {
                 serialReader = new SerialReader();
                 serialPort.addEventListener(serialReader);
                 serialPort.notifyOnDataAvailable(true);
+                serialPort.setInputBufferSize(6);
+                serialPort.enableReceiveThreshold(6);
                 logger.info("Connected to " + portName);
                 return true;
             }
@@ -160,17 +161,22 @@ public class CommModel implements Comm<Graphics> {
         @Override
         public void serialEvent(SerialPortEvent serialPortEvent) {
             logger.trace("have a new mail");
-            byte [] buffer = new byte[32];
+            byte [] buffer = new byte[6];
             int data;
             try {
+                logger.trace("start reading");
                 while (true){
                     data = inputStream.read(buffer);
                     if(data == -1) break;
                     if(data > 0){
-                        logger.trace("data commModel= "+data);
                         changeUI(Calculating.getPosition(buffer, data));
+                        /*logger.trace("data = " + data);*/
                     }
+                    break;
                 }
+                logger.trace("finish reading");
+
+
             } catch (IOException e){
                 logger.error("IOException is occurred: " + e.getMessage());
             } catch (Exception e) {
