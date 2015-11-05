@@ -56,8 +56,9 @@ public class CommModel implements Comm<Graphics> {
                 serialReader = new SerialReader();
                 serialPort.addEventListener(serialReader);
                 serialPort.notifyOnDataAvailable(true);
-                serialPort.setInputBufferSize(6);
-                serialPort.enableReceiveThreshold(6);
+                serialPort.setInputBufferSize(3);
+                /*serialPort.enableReceiveThreshold(3);*/
+                serialPort.setOutputBufferSize(6);
                 logger.info("Connected to " + portName);
                 return true;
             }
@@ -105,27 +106,14 @@ public class CommModel implements Comm<Graphics> {
         }
     }
 
-    private static long[] parseSixByteArray(byte[] arr, int data) throws Exception {
-        if (data % 3 != 0 || arr.length < data) throw new Exception("wrong array length given: "+ arr.length);
-        long[] res = new long[data / 3];
-        int c = 0;
-        for (int i = 0; i < data; i += 3){
-            res[c++] = (arr[i] * 256 + arr[i + 1]) * 256 + arr[i + 2];
-        }
-        return res;
-    }
-
-    private void changeUI(double[] input){
+    private void changeUI(String input){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        for (int i = 0; i < input.length; i++){
-                            gui.updateTerminal(String.valueOf(input[i]) + " - ");
-                        }
-                        gui.updateTerminal("\n");
+                        gui.updateTerminal(input);
                     }
                 });
             }
@@ -164,23 +152,21 @@ public class CommModel implements Comm<Graphics> {
             logger.trace("have a new mail");
             byte [] buffer = new byte[6];
             int data;
+            int a=0;
             try {
                 logger.trace("start reading");
                 while (true){
                     data = inputStream.read(buffer);
                     if(data == -1) break;
                     if(data > 0){
-                        changeUI(Calculating.getPosition(buffer, data));
+                        changeUI(Calculating.getStringPosition(buffer, data));
                         /*logger.trace("data = " + data);*/
-                      /*  for(int i=0; i<data; i++){
-                            logger.trace(buffer[i]);
+                       /* for(int i=0; i<data; i++){
+                            logger.trace("reading: "+buffer[i]);
                         }*/
                     }
                     break;
                 }
-                logger.trace("finish reading");
-
-
             } catch (IOException e){
                 logger.error("IOException is occurred: " + e.getMessage());
             } catch (Exception e) {

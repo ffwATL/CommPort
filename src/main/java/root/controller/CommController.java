@@ -85,7 +85,7 @@ public class CommController implements Initializable, Graphics {
     @Override
     public void updateTerminal(String s){
         logger.trace("appending.. " +s);
-        textArea.appendText(s);
+        textArea.setText(s);
         logger.trace("finished appending ");
     }
 

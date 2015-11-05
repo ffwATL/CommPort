@@ -13,8 +13,8 @@ public class Calculating {
     private static long[] parseSixByteArray(byte[] arr, int data) throws Exception {
         if (arr.length < data) throw new Exception("wrong array length given: "+ arr.length);
         long[] res;
-        if(data == 6){
-            logger.trace("data = 6");
+        if(data == 3 | data == 6){
+            logger.trace("data = " + data);
             res = new long[data / 3];
             int c = 0;
             for (int i = 0; i < data; i += 3){
@@ -44,12 +44,22 @@ public class Calculating {
             position = new double[parsed.length];
             for(int i = 0; i < position.length; i++){
                 if(c++ % 2 == 0){
-                    position[i] = (double) parsed[i] / MAX_VALUE_A;
-                }else position[i] = (double) parsed[i] / MAX_VALUE_H;
+                    position[i] = 360 * (double) parsed[i] / MAX_VALUE_A;
+                }else position[i] = 360 * (double) parsed[i] / MAX_VALUE_H;
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
         return position;
+    }
+
+
+    public static String getStringPosition(byte[] input, int data){
+        StringBuilder builder = new StringBuilder();
+        double[] position = getPosition(input, data);
+        for (int i = 0; i < position.length; i++){
+            builder.append(position[i]+"\n");
+        }
+        return builder.toString();
     }
 }
