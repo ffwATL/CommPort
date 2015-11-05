@@ -152,7 +152,6 @@ public class CommModel implements Comm<Graphics> {
             logger.trace("have a new mail");
             byte [] buffer = new byte[6];
             int data;
-            int a=0;
             try {
                 logger.trace("start reading");
                 while (true){
@@ -161,7 +160,7 @@ public class CommModel implements Comm<Graphics> {
                     if(data > 0){
                         changeUI(Calculating.getStringPosition(buffer, data));
                         /*logger.trace("data = " + data);*/
-                       /* for(int i=0; i<data; i++){
+                        /*for(int i=0; i<data; i++){
                             logger.trace("reading: "+buffer[i]);
                         }*/
                     }
