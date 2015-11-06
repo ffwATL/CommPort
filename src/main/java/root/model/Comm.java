@@ -7,6 +7,8 @@ public interface Comm<T extends Graphics> {
 
     public void setGui(T gui);
 
+    public T getGui();
+
     public boolean connect(String portName, Integer baudRate);
 
     public void write(String  b);

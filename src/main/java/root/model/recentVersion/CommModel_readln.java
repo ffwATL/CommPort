@@ -1,27 +1,12 @@
 package root.model.recentVersion;
 
 
-import gnu.io.*;
-import javafx.application.Platform;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import root.model.Comm;
-import root.util.CommUtil;
 import root.view.Graphics;
 
-import javax.xml.bind.DatatypeConverter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.TooManyListenersException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+public abstract class CommModel_readln implements Comm<Graphics> {
 
-public class CommModel_readln implements Comm<Graphics> {
-
-    private static Logger logger = LogManager.getLogger();
+    /*private static Logger logger = LogManager.getLogger();
     private OutputStream outputStream;
     private Graphics gui;
     private SerialPort serialPort;
@@ -165,5 +150,5 @@ public class CommModel_readln implements Comm<Graphics> {
             logger.trace("finished reading from buffer");
             changeUI(buffer, len);
         }
-    }
+    }*/
 }

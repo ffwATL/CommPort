@@ -14,9 +14,9 @@ import javafx.scene.shape.Circle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import root.model.Comm;
-import root.model.CommModel;
-import root.util.CommUtil;
+import root.model.JsscCommModel;
 import root.util.CommUtilAbstract;
+import root.util.JsscCommUtil;
 import root.view.Graphics;
 
 import java.net.URL;
@@ -33,7 +33,7 @@ public class CommController implements Initializable, Graphics {
     private static final long DEFAULT_DELAY = 100;
 
     private static Comm commModel;
-    private static CommUtilAbstract commUtil = CommUtil.getInstance();
+    private static CommUtilAbstract commUtil = JsscCommUtil.getInstance();
     private static long delay = DEFAULT_DELAY;
     private static String command = DEFAULT;
 
@@ -72,10 +72,9 @@ public class CommController implements Initializable, Graphics {
     @FXML
     private ToggleButton startButton;
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        commModel = CommModel.getInstance();
+        commModel = JsscCommModel.getInstance();
         commModel.setGui(this);
         scanPorts();
         comboBoxInitialization();
