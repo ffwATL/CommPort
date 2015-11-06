@@ -1,4 +1,4 @@
-package root.view;
+package root.controller;
 
 
 public interface Graphics {

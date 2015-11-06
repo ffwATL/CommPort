@@ -5,7 +5,7 @@ import gnu.io.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import root.util.CommDataParser;
-import root.view.Graphics;
+import root.controller.Graphics;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.BufferedInputStream;

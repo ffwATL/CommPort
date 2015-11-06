@@ -64,7 +64,7 @@ public class CommDataParser implements DataParser{
         double[] position = getDoublePosition(input, data);
         for (int i = 0; i < position.length; i++){
             builder.append(position[i]);
-            builder.append("\n");
+            if(i != position.length - 1) builder.append("\n");
         }
         return builder.toString();
     }

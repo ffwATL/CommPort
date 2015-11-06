@@ -5,7 +5,7 @@ import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import root.util.CommUtil;
-import root.view.Graphics;
+import root.controller.Graphics;
 
 import java.util.Timer;
 import java.util.TimerTask;

@@ -17,13 +17,12 @@ import root.model.Comm;
 import root.model.JsscCommModel;
 import root.util.CommUtilAbstract;
 import root.util.JsscCommUtil;
-import root.view.Graphics;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 
-public class CommController implements Initializable, Graphics {
+public class GraphicsController implements Initializable, Graphics {
 
     private static final Logger logger = LogManager.getLogger();
     private static final String FIRST = "1";
@@ -38,7 +37,7 @@ public class CommController implements Initializable, Graphics {
     private static String command = DEFAULT;
 
     private boolean connect;
-    private String portName = "no device";
+    private static String portName = "no device";
     @FXML
     private ComboBox<String> commPortBox;
     @FXML

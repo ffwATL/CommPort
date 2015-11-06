@@ -1,7 +1,7 @@
 package root.model;
 
 
-import root.view.Graphics;
+import root.controller.Graphics;
 
 public interface Comm<T extends Graphics> {
 

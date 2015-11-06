@@ -2,7 +2,7 @@ package root.model.recentVersion;
 
 
 import root.model.Comm;
-import root.view.Graphics;
+import root.controller.Graphics;
 
 public abstract class CommModel_readln implements Comm<Graphics> {
 
