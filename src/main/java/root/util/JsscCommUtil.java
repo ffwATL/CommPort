@@ -6,7 +6,7 @@ import jssc.SerialPortList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class JsscCommUtil  extends CommUtilAbstract{
+public final class JsscCommUtil extends CommUtilAbstract{
 
     private static final Logger logger = LogManager.getLogger();
     private static JsscCommUtil jsscCommUtil;
