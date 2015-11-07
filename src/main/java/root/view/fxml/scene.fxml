@@ -79,7 +79,7 @@
                      </font>
                   </Button>
                   <TextArea fx:id="textArea" editable="false" prefHeight="127.0" prefWidth="200.0" />
-                  <TextField fx:id="inputTextField" disable="true" layoutX="58.0" layoutY="157.0" onAction="#inputTextFieldAction" prefHeight="25.0" prefWidth="84.0" />
+                  <TextField fx:id="inputTextField" disable="true" layoutX="58.0" layoutY="157.0" onAction="#inputTextFieldAction" onKeyReleased="#validateTextInput" prefHeight="25.0" prefWidth="84.0" />
                   <Button fx:id="clearButton" layoutX="177.0" layoutY="1.0" mnemonicParsing="false" onAction="#clear" text="CL">
                      <font>
                         <Font name="System Bold" size="9.0" />

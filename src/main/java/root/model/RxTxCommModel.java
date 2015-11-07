@@ -1,6 +1,5 @@
 package root.model;
 
-
 import gnu.io.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,7 +47,7 @@ public class RxTxCommModel extends CommAbstract {
                 serialReader = new SerialReader();
                 serialPort.addEventListener(serialReader);
                 serialPort.notifyOnDataAvailable(true);
-                serialPort.setInputBufferSize(3);
+                serialPort.setInputBufferSize(6);
                 serialPort.setOutputBufferSize(6);
                 logger.info("Connected to " + portName);
                 return true;
@@ -104,14 +103,16 @@ public class RxTxCommModel extends CommAbstract {
             int data;
             try {
                 logger.trace("have a new mail");
-                    data = inputStream.read(buffer);
-                    if(data > 0){
-                        changeUI(dataParser.getStringPosition(buffer, data));
-                    }
+                data = inputStream.read(buffer);
+                logger.trace("data = " + data);
+                if(data > 0){
+                    logger.trace(buffer[0]);
+                    changeUI(dataParser.getStringPosition(buffer, data));
+                }
             } catch (IOException e){
                 logger.error("IOException is occurred: " + e.getMessage());
             } catch (Exception e) {
-                logger.error(e.getMessage());
+                logger.error("Something goes wrong while reading: " + e.getMessage());
             }
         }
     }

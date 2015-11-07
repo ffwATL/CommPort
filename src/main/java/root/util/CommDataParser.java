@@ -7,8 +7,8 @@ import org.apache.logging.log4j.Logger;
 public class CommDataParser implements DataParser{
 
     private static final Logger logger = LogManager.getLogger();
-    private static final int MAX_VALUE_A = 8355711;
-    private static final int MAX_VALUE_H = 8355711;
+    private static final int MAX_VALUE_A = 16581375;
+    private static final int MAX_VALUE_H = 16581375;
     private static CommDataParser dataParser;
 
     private CommDataParser(){
@@ -19,7 +19,7 @@ public class CommDataParser implements DataParser{
     }
 
     private static double [] parseSixByteArray(byte[] arr, int data) throws Exception {
-        if (arr.length < data) throw new Exception("wrong array length given: "+ arr.length);
+        if (arr.length < data) throw new Exception("Wrong array length given: "+ arr.length);
         long value = 0;
         double [] position = new double[data / 3];
         int c = 0;
@@ -29,9 +29,7 @@ public class CommDataParser implements DataParser{
                 if((i+1) % 3 == 0) {
                     position[c++] = (double) value;
                     value = 0;
-                    /*logger.trace("in cycle " + i);*/
                 }
-               /* logger.trace("value = " + value);*/
             }
         }else logger.warn("Wrong data length: "+ data);
         return position;
@@ -44,8 +42,6 @@ public class CommDataParser implements DataParser{
         int c = 0;
         try {
             parsed = parseSixByteArray(input, data);
-            logger.trace("input[0] = " + parsed[0]);
-            if(parsed.length > 1) logger.trace("input[1] = " + parsed[1]);
             position = new double[parsed.length];
             for(int i = 0; i < position.length; i++){
                 if(c++ % 2 == 0){
@@ -53,7 +49,7 @@ public class CommDataParser implements DataParser{
                 }else position[i] = 360.0 * (parsed[i] / MAX_VALUE_H);
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("Error is occurred while parsing: " + e.getMessage());
         }
         return position;
     }

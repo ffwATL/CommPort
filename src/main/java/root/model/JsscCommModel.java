@@ -20,6 +20,7 @@ public class JsscCommModel extends CommAbstract {
     static {
         DatatypeConverter.printInt(0);
         dataParser = CommDataParser.getInstance();
+        CommDataParser.getInstance();
     }
 
     private JsscCommModel(){}
@@ -75,8 +76,11 @@ public class JsscCommModel extends CommAbstract {
                 try {
                     buffer = serialPort.readBytes();
                     changeUI(dataParser.getStringPosition(buffer, buffer.length));
+                    for (int i = 0; i< buffer.length; i++){
+                        logger.trace("received: " + buffer[i]);
+                    }
                 } catch (SerialPortException e) {
-                    logger.error(e.getMessage());
+                    logger.error("SerialPortException is occurred: " + e.getMessage());
                 }
             }
         }

@@ -31,7 +31,7 @@ public class GraphicsController implements Initializable, Graphics {
     private static final String DEFAULT = FIRST;
     private static final long DEFAULT_DELAY = 100;
 
-    private static Comm commModel;
+    private static final Comm commModel = JsscCommModel.getInstance();;
     private static CommUtilAbstract commUtil = JsscCommUtil.getInstance();
     private static long delay = DEFAULT_DELAY;
     private static String command = DEFAULT;
@@ -73,7 +73,6 @@ public class GraphicsController implements Initializable, Graphics {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        commModel = JsscCommModel.getInstance();
         commModel.setGui(this);
         scanPorts();
         comboBoxInitialization();
@@ -82,9 +81,8 @@ public class GraphicsController implements Initializable, Graphics {
 
     @Override
     public void updateTerminal(String s){
-        logger.trace("appending.. " +s);
         textArea.setText(s);
-        logger.trace("finished appending ");
+        logger.trace("appended.. " +s);
     }
 
     public void scanPorts(){
@@ -218,7 +216,7 @@ public class GraphicsController implements Initializable, Graphics {
     @FXML
     private void validateTextInput(KeyEvent event){
         try{
-            Long l = new Long(timerTextField.getText());
+            Integer l = new Integer(timerTextField.getText());
         }catch (NumberFormatException e){
             logger.trace("trying to handle exception.. ");
             timerTextField.deletePreviousChar();
