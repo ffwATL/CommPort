@@ -12,8 +12,7 @@ public final class RxTxCommUtil extends CommUtilAbstract {
     private static RxTxCommUtil rxTxCommUtil;
     private static final Logger logger = LogManager.getLogger();
 
-    private RxTxCommUtil(){
-    }
+    private RxTxCommUtil(){}
 
     public static RxTxCommUtil getInstance(){
         return rxTxCommUtil == null ? rxTxCommUtil = new RxTxCommUtil() : rxTxCommUtil;

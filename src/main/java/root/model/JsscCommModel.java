@@ -7,6 +7,7 @@ import jssc.SerialPortException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import root.util.CommDataParser;
+import root.util.DataParser;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -15,7 +16,7 @@ public class JsscCommModel extends CommAbstract {
     private static final Logger logger = LogManager.getLogger();
     private static SerialPort serialPort;
     private static JsscCommModel jsscCommModel;
-    private static CommDataParser dataParser;
+    private static DataParser dataParser;
 
     static {
         DatatypeConverter.printInt(0);
@@ -76,8 +77,8 @@ public class JsscCommModel extends CommAbstract {
                 try {
                     buffer = serialPort.readBytes();
                     changeUI(dataParser.getStringPosition(buffer, buffer.length));
-                    for (int i = 0; i< buffer.length; i++){
-                        logger.trace("received: " + buffer[i]);
+                    for (byte b : buffer){
+                        logger.trace("received: " + b);
                     }
                 } catch (SerialPortException e) {
                     logger.error("SerialPortException is occurred: " + e.getMessage());

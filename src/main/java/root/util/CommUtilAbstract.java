@@ -6,13 +6,13 @@ import javafx.collections.ObservableList;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class CommUtilAbstract implements BaudRateCollection, TimeSetConfigCollection, DiscoveringComm {
+public abstract class CommUtilAbstract implements DiscoveringComm {
 
-    private Map<String, Integer> timeConfigMap;
+    private static Map<String, Integer> timeConfigMap;
     private static ObservableList<Integer> baudRateList;
 
-    @Override
-    public Map<String, Integer> getTimeConfigMap(){
+
+    public static Map<String, Integer> getTimeConfigMap(){
         if(timeConfigMap == null){
             timeConfigMap = new HashMap<>();
             timeConfigMap.put("Milliseconds", 1);
@@ -21,13 +21,11 @@ public abstract class CommUtilAbstract implements BaudRateCollection, TimeSetCon
         return timeConfigMap;
     }
 
-    @Override
-    public ObservableList<String> getTimeConfigList(){
+    public static ObservableList<String> getTimeConfigList(){
         return FXCollections.observableArrayList(getTimeConfigMap().keySet());
     }
 
-    @Override
-    public ObservableList<Integer> getBaudRateList(){
+    public static ObservableList<Integer> getBaudRateList(){
         if(baudRateList == null) {
             baudRateList = FXCollections.observableArrayList();
             baudRateList.add(1200);

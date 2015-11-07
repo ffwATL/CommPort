@@ -3,8 +3,9 @@ package root.model;
 import gnu.io.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import root.util.CommDataParser;
 import root.controller.Graphics;
+import root.util.CommDataParser;
+import root.util.DataParser;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.BufferedInputStream;
@@ -20,7 +21,7 @@ public class RxTxCommModel extends CommAbstract {
     private SerialPort serialPort;
     private SerialReader serialReader;
     private static BufferedInputStream inputStream;
-    private static CommDataParser dataParser;
+    private static DataParser dataParser;
 
     static {
         DatatypeConverter.printInt(0);
@@ -47,7 +48,7 @@ public class RxTxCommModel extends CommAbstract {
                 serialReader = new SerialReader();
                 serialPort.addEventListener(serialReader);
                 serialPort.notifyOnDataAvailable(true);
-                serialPort.setInputBufferSize(6);
+                serialPort.setInputBufferSize(3);
                 serialPort.setOutputBufferSize(6);
                 logger.info("Connected to " + portName);
                 return true;
@@ -97,6 +98,7 @@ public class RxTxCommModel extends CommAbstract {
     }
 
     static class SerialReader implements SerialPortEventListener {
+
         @Override
         public void serialEvent(SerialPortEvent serialPortEvent) {
             byte [] buffer = new byte[6];
@@ -106,7 +108,6 @@ public class RxTxCommModel extends CommAbstract {
                 data = inputStream.read(buffer);
                 logger.trace("data = " + data);
                 if(data > 0){
-                    logger.trace(buffer[0]);
                     changeUI(dataParser.getStringPosition(buffer, data));
                 }
             } catch (IOException e){

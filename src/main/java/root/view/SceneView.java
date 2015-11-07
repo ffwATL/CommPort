@@ -8,7 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import root.model.RxTxCommModel;
+import root.model.JsscCommModel;
 
 import java.io.File;
 
@@ -29,7 +29,8 @@ public class SceneView extends Application {
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent windowEvent) {
-                RxTxCommModel.getInstance().close();
+                /*RxTxCommModel.getInstance().close();*/
+                JsscCommModel.getInstance().close();
             }
         });
         primaryStage.setScene(scene);
