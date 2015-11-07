@@ -4,7 +4,7 @@ package root.model;
 import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import root.util.CommUtil;
+import root.util.RxTxCommUtil;
 import root.controller.Graphics;
 
 import java.util.Timer;
@@ -30,7 +30,7 @@ public abstract class CommAbstract implements Comm<Graphics> {
 
     @Override
     public void executeCommand(String send, long delay, long period, String factor){
-        int f = CommUtil.getInstance().getTimeConfigMap().get(factor);
+        int f = RxTxCommUtil.getInstance().getTimeConfigMap().get(factor);
         delay *= f;
         period = delay;
         Executor executor = Executors.newCachedThreadPool();

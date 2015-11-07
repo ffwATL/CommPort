@@ -28,7 +28,7 @@ public class TestDrive {
         Thread.sleep(20);
         comm.close();
         /*Comm comm = RxTxCommModel.getInstance();
-        comm.connect(CommUtil.getInstance().getPortName().get(0),9600);
+        comm.connect(RxTxCommUtil.getInstance().getPortName().get(0),9600);
         comm.write("3");
         Thread.sleep(20);
         comm.write("3");

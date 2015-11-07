@@ -7,16 +7,16 @@ import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public final class CommUtil extends CommUtilAbstract {
+public final class RxTxCommUtil extends CommUtilAbstract {
 
-    private static CommUtil commUtil;
+    private static RxTxCommUtil rxTxCommUtil;
     private static final Logger logger = LogManager.getLogger();
 
-    private CommUtil(){
+    private RxTxCommUtil(){
     }
 
-    public static CommUtil getInstance(){
-        return commUtil == null ? commUtil = new CommUtil() : commUtil;
+    public static RxTxCommUtil getInstance(){
+        return rxTxCommUtil == null ? rxTxCommUtil = new RxTxCommUtil() : rxTxCommUtil;
     }
 
     @Override

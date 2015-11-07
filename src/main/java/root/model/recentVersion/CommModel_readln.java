@@ -110,7 +110,7 @@ public abstract class CommModel_readln implements Comm<Graphics> {
 
     @Override
     public void executeCommand(String send, long delay, long period, String factor){
-        int f = CommUtil.getInstance().getTimeConfigMap().get(factor);
+        int f = RxTxCommUtil.getInstance().getTimeConfigMap().get(factor);
         delay *= f;
         period = delay;
         Executor executor = Executors.newCachedThreadPool();
