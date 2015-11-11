@@ -11,6 +11,13 @@
             </Policies>
             <PatternLayout pattern="%d{MM-dd-yy} %d{HH:mm:ss.SSS} [%t] %-5p %c{2} - %m%n"/>
         </RollingFile>
+        <RollingFile name="serviceAppender" fileName="LOGS\service.log" filePattern="LOGS\service-%d{MM-dd-yyyy}-%i.log">
+            <DefaultRolloverStrategy fileIndex="max" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="2"/>
+            </Policies>
+            <PatternLayout pattern="%msg%n"/>
+        </RollingFile>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
@@ -19,5 +26,9 @@
         <Root level="trace">
             <AppenderRef ref="Console"/>
         </Root>
+        <Logger name="fileLogger" level="info">
+            <AppenderRef ref="serviceAppender"/>
+        </Logger>
     </Loggers>
+
 </Configuration>

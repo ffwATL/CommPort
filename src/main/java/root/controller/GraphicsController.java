@@ -35,6 +35,8 @@ public class GraphicsController implements Initializable, Graphics {
     private static CommUtilAbstract commUtil = JsscCommUtil.getInstance();
     private static long delay = DEFAULT_DELAY;
     private static String command = DEFAULT;
+    private static boolean writeFile;
+    private static final Logger writeFileLogger = LogManager.getLogger("fileLogger");
 
     private boolean connect;
     private static String portName = "no device";
@@ -70,6 +72,8 @@ public class GraphicsController implements Initializable, Graphics {
     private ToggleButton  thirdCommandButton;
     @FXML
     private ToggleButton startButton;
+    @FXML
+    private ToggleButton writeLogButton;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -82,7 +86,17 @@ public class GraphicsController implements Initializable, Graphics {
     @Override
     public void updateTerminal(String s){
         textArea.setText(s);
-        logger.trace("appended.. " +s);
+        if(writeFile) writeLog(s.replace("\n","   "));
+        /*logger.trace("appended.. " +s);*/
+    }
+
+    @FXML
+    private void setWriteFile(){
+        writeFile = !writeFile;
+    }
+
+    private void writeLog(String log){
+        writeFileLogger.info(log);
     }
 
     public void scanPorts(){
@@ -109,7 +123,7 @@ public class GraphicsController implements Initializable, Graphics {
 
     public void inputTextFieldAction(ActionEvent event){
         commModel.write(inputTextField.getText());
-        inputTextField.setText("");
+        /*inputTextField.setText("");*/
     }
 
     public void clear(ActionEvent event){
@@ -144,6 +158,7 @@ public class GraphicsController implements Initializable, Graphics {
         }
         else {
             connectButton.setTooltip(new Tooltip("Make a connection to selected COM"));
+            commModel.stopExecutingCommand();
             commModel.close();
             connectButton.setText("Connect");
             indicatorCircle.setFill(Color.RED);

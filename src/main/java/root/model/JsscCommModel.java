@@ -47,7 +47,7 @@ public class JsscCommModel extends CommAbstract {
 
     @Override
     public void write(String b) {
-        logger.trace("starting conversion..");
+        /*logger.trace("starting conversion..");*/
         byte [] arr = {Byte.valueOf(b)};
         String hex = DatatypeConverter.printHexBinary(arr);
         try {
@@ -61,7 +61,10 @@ public class JsscCommModel extends CommAbstract {
     @Override
     public void close() {
         try {
-            serialPort.closePort();
+            if(serialPort!= null && serialPort.isOpened()){
+                serialPort.removeEventListener();
+                serialPort.closePort();
+            }
         } catch (SerialPortException e) {
             logger.error(e.getMessage());
         }
@@ -76,10 +79,15 @@ public class JsscCommModel extends CommAbstract {
             if(serialPortEvent.getEventValue() > 0){
                 try {
                     buffer = serialPort.readBytes();
-                    changeUI(dataParser.getStringPosition(buffer, buffer.length));
+                    StringBuilder builder = new StringBuilder();
+                    /*builder.append("raw: ");
                     for (byte b : buffer){
-                        logger.trace("received: " + b);
+                        builder.append(b & 0xFF);
+                        builder.append(" ");
                     }
+                    builder.append("\n");*/
+                    builder.append(dataParser.getStringPosition(buffer, buffer.length));
+                    changeUI(builder.toString());
                 } catch (SerialPortException e) {
                     logger.error("SerialPortException is occurred: " + e.getMessage());
                 }

@@ -9,7 +9,7 @@ import root.util.CommUtilAbstract;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public abstract class CommAbstract implements Comm<Graphics> {
@@ -17,6 +17,9 @@ public abstract class CommAbstract implements Comm<Graphics> {
     private static final Logger logger = LogManager.getLogger();
     private static Graphics gui;
     private static Timer timer;
+    private static ExecutorService executor;
+    private static TimerTask timerTask;
+    private String send;
 
     @Override
     public Graphics getGui(){
@@ -33,18 +36,23 @@ public abstract class CommAbstract implements Comm<Graphics> {
         int f = CommUtilAbstract.getTimeConfigMap().get(factor);
         delay *= f;
         period = delay;
-        Executor executor = Executors.newCachedThreadPool();
+        executor = Executors.newCachedThreadPool();
         timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
+        this.send = send;
+        timer.scheduleAtFixedRate(getTimerTask(), delay, period);
+    }
+
+    private TimerTask getTimerTask(){
+        return timerTask == null ? timerTask = new TimerTask() {
+            @Override
             public void run() {
                 executor.execute(new Runnable() {
                     public void run() {
                         write(send);
-                        logger.trace("inside executor");
                     }
                 });
             }
-        }, delay, period);
+        } : timerTask;
     }
 
     public static void changeUI(String input){
@@ -66,5 +74,10 @@ public abstract class CommAbstract implements Comm<Graphics> {
         if(timer != null) {
             timer.cancel();
         }
+        if(timerTask!= null) timerTask.cancel();
+        if(executor!=null) executor.shutdown();
+        timerTask = null;
+        timer = null;
+        executor = null;
     }
 }

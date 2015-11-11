@@ -7,8 +7,8 @@ import org.apache.logging.log4j.Logger;
 public class CommDataParser implements DataParser{
 
     private static final Logger logger = LogManager.getLogger();
-    private static final int MAX_VALUE_A = 16581375;
-    private static final int MAX_VALUE_H = 16581375;
+    private static final double MAX_VALUE_A = 1800000/10;
+    private static final double MAX_VALUE_H = 1800000/10;
     private static CommDataParser dataParser;
 
     private CommDataParser(){
