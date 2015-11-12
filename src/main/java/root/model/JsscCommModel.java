@@ -47,11 +47,10 @@ public class JsscCommModel extends CommAbstract {
 
     @Override
     public void write(String b) {
-        /*logger.trace("starting conversion..");*/
         byte [] arr = {Byte.valueOf(b)};
         String hex = DatatypeConverter.printHexBinary(arr);
         try {
-            logger.trace("writing " +hex);
+            logger.trace("writing " + hex);
             serialPort.writeByte(Byte.valueOf(hex));
         } catch (SerialPortException e) {
             logger.error(e.getMessage());

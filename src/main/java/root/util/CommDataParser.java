@@ -4,11 +4,11 @@ package root.util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class CommDataParser implements DataParser{
+public class CommDataParser implements DataParser {
 
     private static final Logger logger = LogManager.getLogger();
-    private static final double MAX_VALUE_A = 1800000/10;
-    private static final double MAX_VALUE_H = 1800000/10;
+    private static final double MAX_VALUE_A = 1800000/2;
+    private static final double MAX_VALUE_H = 1800000/2;
     private static CommDataParser dataParser;
 
     private CommDataParser(){

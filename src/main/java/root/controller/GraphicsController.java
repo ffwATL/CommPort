@@ -1,6 +1,5 @@
 package root.controller;
 
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -9,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.apache.logging.log4j.LogManager;
@@ -36,10 +36,11 @@ public class GraphicsController implements Initializable, Graphics {
     private static long delay = DEFAULT_DELAY;
     private static String command = DEFAULT;
     private static boolean writeFile;
+    private static String portName = "no device";
     private static final Logger writeFileLogger = LogManager.getLogger("fileLogger");
 
     private boolean connect;
-    private static String portName = "no device";
+
     @FXML
     private ComboBox<String> commPortBox;
     @FXML
@@ -74,6 +75,10 @@ public class GraphicsController implements Initializable, Graphics {
     private ToggleButton startButton;
     @FXML
     private ToggleButton writeLogButton;
+    @FXML
+    private Pane leftPane;
+    @FXML
+    private Pane rightPane;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -145,8 +150,8 @@ public class GraphicsController implements Initializable, Graphics {
 
     private void changeLeftPaneState(boolean state){
         inputTextField.setDisable(!state);
-        commPortBox.setDisable(state);
         baudRateBox.setDisable(state);
+        commPortBox.setDisable(state);
         scanButton.setDisable(state);
         changeRightPaneState(!state);
         if(state) {
@@ -161,26 +166,24 @@ public class GraphicsController implements Initializable, Graphics {
             commModel.stopExecutingCommand();
             commModel.close();
             connectButton.setText("Connect");
-            indicatorCircle.setFill(Color.RED);
+            indicatorCircle.setFill(Color.web("#ff1f1f"));
             connectStatusLabel.setText("Disconnected");
-            connectStatusLabel.setTextFill(Color.RED);
+            connectStatusLabel.setTextFill(Color.web("#ff1f1f"));
         }
         connect = state;
     }
 
     private void changeRightPaneState(boolean state){
-        setTimerButton.setDisable(state);
-        secondCommandButton.setDisable(state);
-        firstCommandButton.setDisable(state);
-        thirdCommandButton.setDisable(state);
-        timeConfigBox.setDisable(state);
-        timerTextField.setDisable(state);
-        startButton.setDisable(true);
-        setTimerButton.setSelected(state);
-        firstCommandButton.setSelected(state);
-        secondCommandButton.setSelected(state);
-        thirdCommandButton.setSelected(state);
+        rightPane.setDisable(state);
+        if(firstCommandButton.isSelected()) firstCommandButton.setSelected(false);
+        if (secondCommandButton.isSelected()) secondCommandButton.setSelected(false);
+        if (thirdCommandButton.isSelected()) thirdCommandButton.setSelected(false);
+        if (setTimerButton.isSelected()) setTimerButton.setSelected(false);
+        if (startButton.isSelected()) startButton.setSelected(false);
+        if (writeLogButton.isSelected()) writeLogButton.setSelected(false);
         if(state){
+            timerTextField.setDisable(!state);
+            timeConfigBox.setDisable(!state);
             firstCommandButton.setTextFill(Color.web("#860000"));
             secondCommandButton.setTextFill(Color.web("#860000"));
             thirdCommandButton.setTextFill(Color.web("#860000"));
@@ -204,11 +207,11 @@ public class GraphicsController implements Initializable, Graphics {
             startButton.setText("Start");
         }else{
             scanCommand();
-            commModel.executeCommand(command, delay, delay, timeConfigBox.getValue());
-            // call executor.start();
+            commModel.executeCommand(command, delay, delay, timeConfigBox.getValue()); // call executor.start();
             startButton.setText("Stop");
         }
     }
+
     @FXML
     private void setTimerHandler(ActionEvent event){
         String delayString = timerTextField.getText();
@@ -230,13 +233,21 @@ public class GraphicsController implements Initializable, Graphics {
 
     @FXML
     private void validateTextInput(KeyEvent event){
-        try{
-            Integer l = new Integer(timerTextField.getText());
-        }catch (NumberFormatException e){
-            logger.trace("trying to handle exception.. ");
-            timerTextField.deletePreviousChar();
-        }catch (Exception e){
-            logger.trace("something goes wrong: " + e.getMessage());
+        Integer l;
+        if(event.getSource() == timerTextField){
+            try{
+                l = new Integer(timerTextField.getText());
+            }catch (NumberFormatException e){
+                logger.trace("trying to handle exception.. ");
+                timerTextField.deletePreviousChar();
+            }
+        }else {
+            try{
+                l = new Integer(inputTextField.getText());
+            }catch (NumberFormatException e){
+                logger.trace("trying to handle exception.. ");
+               inputTextField.deletePreviousChar();
+            }
         }
     }
 
