@@ -79,6 +79,12 @@ public class GraphicsController implements Initializable, Graphics {
     private Pane leftPane;
     @FXML
     private Pane rightPane;
+    @FXML
+    private Label maxLabelH;
+    @FXML
+    private Label maxLabelA;
+
+    private static boolean firstStart = true;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -90,9 +96,21 @@ public class GraphicsController implements Initializable, Graphics {
 
     @Override
     public void updateTerminal(String s){
-        textArea.setText(s);
-        if(writeFile) writeLog(s.replace("\n","   "));
+        if(firstStart){
+            setLabels(s);
+        }
+        else {
+            textArea.setText(s);
+            if(writeFile) writeLog(s.replace("\n","   "));
+        }
         /*logger.trace("appended.. " +s);*/
+    }
+
+    private void setLabels(String s){
+        String[] parsed = s.split("\n");
+        maxLabelA.setText("Max A = " + parsed[0]);
+        maxLabelH.setText("Max H = " + parsed[1]);
+        firstStart = !firstStart;
     }
 
     @FXML
@@ -123,7 +141,10 @@ public class GraphicsController implements Initializable, Graphics {
     public void connect(ActionEvent event){
         if (!connect && commModel.connect(portName, baudRateBox.getValue())) {
             changeLeftPaneState(true);
-        }else changeLeftPaneState(false);
+        }else{
+            changeLeftPaneState(false);
+            firstStart = !firstStart;
+        }
     }
 
     public void inputTextFieldAction(ActionEvent event){

@@ -7,4 +7,6 @@ public interface DataParser {
 
     public String getStringPosition(byte[] input, int data);
 
+    public String setMaxValues(byte[] arr, int data);
+
 }

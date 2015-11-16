@@ -17,6 +17,7 @@ public class JsscCommModel extends CommAbstract {
     private static SerialPort serialPort;
     private static JsscCommModel jsscCommModel;
     private static DataParser dataParser;
+    private static boolean firstStart = true;
 
     static {
         DatatypeConverter.printInt(0);
@@ -38,10 +39,12 @@ public class JsscCommModel extends CommAbstract {
             serialPort.setParams(baudRate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
             serialPort.addEventListener(new PortReader());
             logger.info("Connected to " + portName);
+            write("7");
             return true;
         } catch (SerialPortException e) {
             logger.error(e.getMessage());
         }
+
         return false;
     }
 
@@ -50,7 +53,7 @@ public class JsscCommModel extends CommAbstract {
         byte [] arr = {Byte.valueOf(b)};
         String hex = DatatypeConverter.printHexBinary(arr);
         try {
-            logger.trace("writing " + hex);
+            /*logger.trace("writing " + hex);*/
             serialPort.writeByte(Byte.valueOf(hex));
         } catch (SerialPortException e) {
             logger.error(e.getMessage());
@@ -67,6 +70,7 @@ public class JsscCommModel extends CommAbstract {
         } catch (SerialPortException e) {
             logger.error(e.getMessage());
         }
+        firstStart = !firstStart;
         serialPort = null;
     }
 
@@ -77,16 +81,22 @@ public class JsscCommModel extends CommAbstract {
             byte[] buffer;
             if(serialPortEvent.getEventValue() > 0){
                 try {
-                    buffer = serialPort.readBytes();
                     StringBuilder builder = new StringBuilder();
-                    /*builder.append("raw: ");
-                    for (byte b : buffer){
-                        builder.append(b & 0xFF);
-                        builder.append(" ");
+                    buffer = serialPort.readBytes();
+                    if(firstStart){
+                        changeUI(dataParser.setMaxValues(buffer, buffer.length));
+                        firstStart = !firstStart;
+                    }else {
+                        builder.append("raw: ");
+                        for (byte b : buffer){
+                            builder.append(b & 0xFF);
+                            builder.append(" ");
+                        }
+                        builder.append("\n");
+                        builder.append(dataParser.getStringPosition(buffer, buffer.length));
+                        changeUI(builder.toString());
                     }
-                    builder.append("\n");*/
-                    builder.append(dataParser.getStringPosition(buffer, buffer.length));
-                    changeUI(builder.toString());
+
                 } catch (SerialPortException e) {
                     logger.error("SerialPortException is occurred: " + e.getMessage());
                 }
