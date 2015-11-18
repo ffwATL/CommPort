@@ -44,7 +44,6 @@ public class JsscCommModel extends CommAbstract {
         } catch (SerialPortException e) {
             logger.error(e.getMessage());
         }
-
         return false;
     }
 
@@ -53,7 +52,6 @@ public class JsscCommModel extends CommAbstract {
         byte [] arr = {Byte.valueOf(b)};
         String hex = DatatypeConverter.printHexBinary(arr);
         try {
-            /*logger.trace("writing " + hex);*/
             serialPort.writeByte(Byte.valueOf(hex));
         } catch (SerialPortException e) {
             logger.error(e.getMessage());
@@ -87,7 +85,6 @@ public class JsscCommModel extends CommAbstract {
                         changeUI(dataParser.setMaxValues(buffer, buffer.length));
                         firstStart = !firstStart;
                     }else {
-                        builder.append("raw: ");
                         for (byte b : buffer){
                             builder.append(b & 0xFF);
                             builder.append(" ");
@@ -96,7 +93,6 @@ public class JsscCommModel extends CommAbstract {
                         builder.append(dataParser.getStringPosition(buffer, buffer.length));
                         changeUI(builder.toString());
                     }
-
                 } catch (SerialPortException e) {
                     logger.error("SerialPortException is occurred: " + e.getMessage());
                 }

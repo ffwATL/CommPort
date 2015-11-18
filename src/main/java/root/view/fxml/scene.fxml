@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.control.*?>
@@ -8,14 +10,28 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.controller.GraphicsController">
+<AnchorPane styleClass="root" stylesheets="@appCSS.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.controller.GraphicsController">
    <children>
       <BorderPane layoutY="6.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
             <Pane prefHeight="79.0" prefWidth="600.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label fx:id="maxLabelH" layoutX="198.0" layoutY="44.0" text="Max H = " />
-                  <Label fx:id="maxLabelA" layoutX="198.0" layoutY="19.0" text="Max A = " />
+                  <Label layoutX="198.0" layoutY="50.0" text="max H = " textFill="#5b5d85">
+                     <font>
+                        <Font name="Consolas Bold" size="12.0" />
+                     </font></Label>
+                  <Label layoutX="198.0" layoutY="33.0" text="max A = " textFill="#5b5d85">
+                     <font>
+                        <Font name="Consolas Bold" size="12.0" />
+                     </font></Label>
+                  <Label fx:id="maxLabelA" layoutX="250.0" layoutY="33.0" styleClass="labelMax" text="0.0">
+                     <font>
+                        <Font name="Courier New" size="13.0" />
+                     </font></Label>
+                  <Label layoutX="250.0" layoutY="49.0" styleClass="labelMax" text="0.0">
+                     <font>
+                        <Font name="Courier New" size="13.0" />
+                     </font></Label>
                </children></Pane>
          </top>
          <left>
@@ -31,18 +47,26 @@
                         <Bloom threshold="0.91" />
                      </effect>
                   </ComboBox>
-                  <Label layoutX="116.0" layoutY="28.0" text="COM port" />
-                  <Label layoutX="116.0" layoutY="75.0" text="Baud rate" />
-                  <Circle fx:id="indicatorCircle" fill="#ff1f1f" layoutX="17.0" layoutY="10.0" opacity="0.52" radius="6.0" stroke="#ffffff00" strokeType="INSIDE">
+                  <Label layoutX="116.0" layoutY="28.0" styleClass="labelOrange" text="COM port" />
+                  <Label layoutX="116.0" layoutY="75.0" styleClass="labelOrange" text="Baud rate" />
+                  <Circle fx:id="indicatorCircle" fill="#d30031" layoutX="17.0" layoutY="10.0" opacity="0.52" radius="6.0" stroke="#ffffff00" strokeType="INSIDE">
                      <effect>
                         <BoxBlur />
                      </effect>
                   </Circle>
-                  <Label fx:id="connectStatusLabel" layoutX="30.0" layoutY="3.0" text="Disconnected" textFill="#e10505">
+                  <Label fx:id="connectStatusLabel" layoutX="30.0" layoutY="3.0" text="Disconnected" textFill="#d30031">
                      <font>
                         <Font size="10.0" />
                      </font>
                   </Label>
+                  <ImageView fitHeight="160.0" fitWidth="145.0" layoutY="164.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@Bender_right_small.png" />
+                     </image>
+                     <effect>
+                        <Glow level="0.53" />
+                     </effect>
+                  </ImageView>
                </children>
             </Pane>
          </left>
@@ -57,18 +81,18 @@
                         <Font size="10.0" />
                      </font></TextField>
                   <ToggleButton fx:id="setTimerButton" layoutX="124.0" layoutY="75.0" mnemonicParsing="false" onAction="#setTimerHandler" text="Set timer" />
-                  <ToggleButton fx:id="firstCommandButton" layoutX="11.0" layoutY="75.0" mnemonicParsing="false" onAction="#toggleCommandButtonHandler" text="1" textFill="#860000" />
-                  <ToggleButton fx:id="secondCommandButton" layoutX="37.0" layoutY="75.0" mnemonicParsing="false" onAction="#toggleCommandButtonHandler" text="2" textFill="#860000" />
-                  <ToggleButton fx:id="thirdCommandButton" layoutX="63.0" layoutY="75.0" mnemonicParsing="false" onAction="#toggleCommandButtonHandler" text="3" textFill="#860000" />
+                  <ToggleButton fx:id="firstCommandButton" layoutX="11.0" layoutY="75.0" mnemonicParsing="false" onAction="#toggleCommandButtonHandler" text="1" textAlignment="CENTER" textFill="#860000" />
+                  <ToggleButton fx:id="secondCommandButton" layoutX="37.0" layoutY="75.0" mnemonicParsing="false" onAction="#toggleCommandButtonHandler" text="2" textAlignment="CENTER" textFill="#860000" />
+                  <ToggleButton fx:id="thirdCommandButton" layoutX="63.0" layoutY="75.0" mnemonicParsing="false" onAction="#toggleCommandButtonHandler" text="3" textAlignment="CENTER" textFill="#860000" />
                   <ToggleButton fx:id="startButton" layoutX="25.0" layoutY="129.0" mnemonicParsing="false" onAction="#startButtonHandler" text="Start" />
                   <ComboBox fx:id="timeConfigBox" layoutX="80.0" layoutY="24.0" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="108.0">
                      <effect>
                         <Bloom threshold="0.91" />
                      </effect>
                   </ComboBox>
-                  <ToggleButton fx:id="writeLogButton" layoutX="124.0" layoutY="132.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setWriteFile" text="Write">
+                  <ToggleButton fx:id="writeLogButton" layoutX="137.0" layoutY="133.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setWriteFile" prefHeight="17.0" prefWidth="34.0" styleClass="writeToggle-button" text="W/F">
                      <font>
-                        <Font size="9.0" />
+                        <Font size="5.0" />
                      </font>
                   </ToggleButton>
                </children>
@@ -77,7 +101,7 @@
          <center>
             <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="scanButton" layoutX="10.0" layoutY="230.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#scanPorts" prefHeight="22.0" prefWidth="80.0" text="Scan" textAlignment="CENTER">
+                  <Button fx:id="scanButton" layoutX="10.0" layoutY="230.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#scanPorts" prefHeight="22.0" prefWidth="80.0" stylesheets="@appCSS.css" text="Scan" textAlignment="CENTER">
                      <font>
                         <Font name="SansSerif Regular" size="12.0" />
                      </font>
@@ -89,15 +113,21 @@
                   </Button>
                   <TextArea fx:id="textArea" editable="false" prefHeight="101.0" prefWidth="200.0">
                      <font>
-                        <Font size="14.0" />
-                     </font></TextArea>
-                  <TextField fx:id="inputTextField" disable="true" layoutX="58.0" layoutY="157.0" onAction="#inputTextFieldAction" onKeyReleased="#validateTextInput" prefHeight="25.0" prefWidth="84.0" />
-                  <Button fx:id="clearButton" layoutX="177.0" layoutY="1.0" mnemonicParsing="false" onAction="#clear" text="CL">
+                        <Font name="Courier New Bold" size="13.0" />
+                     </font>
+                     <effect>
+                        <Glow level="0.28" />
+                     </effect></TextArea>
+                  <TextField fx:id="inputTextField" disable="true" layoutX="58.0" layoutY="160.0" onAction="#inputTextFieldAction" onKeyReleased="#validateTextInput" prefHeight="0.0" prefWidth="84.0">
+                     <font>
+                        <Font name="Courier New Bold" size="11.0" />
+                     </font></TextField>
+                  <Button fx:id="clearButton" layoutX="187.0" layoutY="1.0" mnemonicParsing="false" onAction="#clear" styleClass="clearButton" text="CL">
                      <font>
                         <Font name="System Bold" size="9.0" />
                      </font>
                   </Button>
-                  <Label layoutX="3.0" layoutY="161.0" text="Input line:" />
+                  <Label layoutX="3.0" layoutY="161.0" styleClass="labelOrange" text="Input line:" />
                </children>
             </Pane>
          </center>

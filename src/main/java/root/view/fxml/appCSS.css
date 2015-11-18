@@ -1,0 +1,137 @@
+.root{
+    -fx-background-color: #D5DCDE;
+}
+.button{
+    -fx-text-fill: white;
+    -fx-background-color: #84A2AB;
+    -fx-background-radius: 2;
+    -fx-border-radius: 2px;
+    -fx-padding: 2px;
+}
+.button:hover{
+    -fx-background-color: #BF919B;
+}
+.button:pressed{
+    -fx-background-color: #DB516F;
+}
+.clearButton{
+    -fx-border-radius: 0;
+    -fx-background-radius: 1;
+    -fx-padding: 1;
+}
+.text-area{
+    -fx-border-radius: 1px;
+    -fx-padding: 1px;
+    -fx-background-color: #A1C2CC;
+    -fx-text-fill: #8F2154;
+
+}
+.labelOrange{
+    -fx-text-fill: #6F7094;
+}
+.labelMax{
+    -fx-text-fill: #6C73E0;
+}
+.combo-box  {
+    -fx-background-color: transparent, #e2e2e2, transparent, #84A2AB;
+    -fx-background-radius: 2;
+    -fx-border-radius: 2;
+    -fx-padding: 0.166667em; /* 2 */
+    -fx-font-size: 12px;
+}
+
+.combo-box  .list-cell{
+    -fx-text-fill: white;
+}
+.combo-box:disabled {
+    -fx-opacity: .4;
+}
+
+/* ------- OPEN BUTTON ------- */
+.combo-box .arrow-button {
+    -fx-background-color: transparent, transparent, #84A2AB;
+}
+
+/* ------- ARROW* ------- */
+.combo-box .arrow {
+    -fx-background-color: transparent, #495C61;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #A2ADB0, -fx-control-inner-background;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0) , 8, 0.0 , 0 , 0 );
+}
+
+.combo-box-popup .list-view .list-cell{
+    -fx-background-color: #A2ADB0;
+    -fx-text-fill: white;
+}
+
+.combo-box-popup .list-view .list-cell:hover{
+    -fx-background-color: #D49F4A;
+    -fx-text-fill: #1d1d1d;
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected{
+    -fx-background-color: #D6B278;
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected:hover {
+    -fx-background-color: #D49F4A;
+}
+
+.combo-box-popup .list-view .list-cell:filled:pressed, .combo-box-popup .list-view .list-cell:filled:selected:pressed
+{
+    -fx-background-color: #D49F4A;
+    -fx-text-fill: #1d1d1d;
+}
+
+.toggle-button {
+    -fx-background-radius: 2px;
+    -fx-border-radius: 2px;
+    -fx-background-color: #5E7B8A;
+    -fx-font-size: 11px;
+    -fx-text-fill: white;
+}
+
+.toggle-button:focused {
+
+}
+
+.toggle-button:hover {
+    /*-fx-text-fill: #d8d8d8;*/
+    -fx-background-color: #BF919B;
+}
+
+.toggle-button:selected {
+    -fx-background-color: #DB516F;
+    -fx-border-color: #DB516F;
+    -fx-border-width: 1,1;
+    -fx-border-radius: 1px;
+    /*-fx-text-fill: #1d1d1d;*/
+}
+
+/*.toggle-button:selected:hover {
+    -fx-background-color: #BFE3C3;
+    -fx-text-fill: #1d1d1d;
+    -fx-border-color: #eee;
+}*/
+/*.toggle-button:disabled {
+    -fx-opacity: -fx-disabled-opacity;
+}*/
+.writeToggle-button{
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-font-size: 9px;
+}
+.writeToggle-button:selected{
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+
+.text-field{
+    -fx-text-fill: #6C73E0;
+    -fx-border-radius: 1;
+    -fx-background-radius: 1;
+    -fx-background-color: #F0F5F4;
+}

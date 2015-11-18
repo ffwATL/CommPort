@@ -96,9 +96,7 @@ public class GraphicsController implements Initializable, Graphics {
 
     @Override
     public void updateTerminal(String s){
-        if(firstStart){
-            setLabels(s);
-        }
+        if(firstStart) setLabels(s);
         else {
             textArea.setText(s);
             if(writeFile) writeLog(s.replace("\n","   "));
@@ -108,8 +106,8 @@ public class GraphicsController implements Initializable, Graphics {
 
     private void setLabels(String s){
         String[] parsed = s.split("\n");
-        maxLabelA.setText("Max A = " + parsed[0]);
-        maxLabelH.setText("Max H = " + parsed[1]);
+        if(parsed.length > 0) maxLabelA.setText(parsed[0]);
+        if(parsed.length > 1) maxLabelH.setText(parsed[1]);
         firstStart = !firstStart;
     }
 
@@ -179,17 +177,17 @@ public class GraphicsController implements Initializable, Graphics {
             connectButton.setTooltip(new Tooltip("Close a connection"));
             connectButton.setText("Disconnect");
             connectStatusLabel.setText("Connected");
-            indicatorCircle.setFill(Color.GREEN);
-            connectStatusLabel.setTextFill(Color.GREEN);
+            indicatorCircle.setFill(Color.web("#1abc38"));
+            connectStatusLabel.setTextFill(Color.web("#1abc38"));
         }
         else {
             connectButton.setTooltip(new Tooltip("Make a connection to selected COM"));
             commModel.stopExecutingCommand();
             commModel.close();
             connectButton.setText("Connect");
-            indicatorCircle.setFill(Color.web("#ff1f1f"));
+            indicatorCircle.setFill(Color.web("#d30031"));
             connectStatusLabel.setText("Disconnected");
-            connectStatusLabel.setTextFill(Color.web("#ff1f1f"));
+            connectStatusLabel.setTextFill(Color.web("#d30031"));
         }
         connect = state;
     }
@@ -277,21 +275,12 @@ public class GraphicsController implements Initializable, Graphics {
         if(event.getSource() == firstCommandButton){
             secondCommandButton.setSelected(false);
             thirdCommandButton.setSelected(false);
-            firstCommandButton.textFillProperty().setValue(Color.GREEN);
-            secondCommandButton.textFillProperty().setValue(Color.web("#860000"));
-            thirdCommandButton.textFillProperty().setValue(Color.web("#860000"));
         }else if(event.getSource() == secondCommandButton){
             firstCommandButton.setSelected(false);
             thirdCommandButton.setSelected(false);
-            secondCommandButton.textFillProperty().setValue(Color.GREEN);
-            firstCommandButton.textFillProperty().setValue(Color.web("#860000"));
-            thirdCommandButton.textFillProperty().setValue(Color.web("#860000"));
         }else if(event.getSource() == thirdCommandButton){
             firstCommandButton.setSelected(false);
             secondCommandButton.setSelected(false);
-            thirdCommandButton.textFillProperty().setValue(Color.GREEN);
-            secondCommandButton.textFillProperty().setValue(Color.web("#860000"));
-            firstCommandButton.textFillProperty().setValue(Color.web("#860000"));
         }
     }
 
