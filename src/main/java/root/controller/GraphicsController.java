@@ -83,6 +83,8 @@ public class GraphicsController implements Initializable, Graphics {
     private Label maxLabelH;
     @FXML
     private Label maxLabelA;
+    @FXML
+    private Button enterButton;
 
     private static boolean firstStart = true;
 
@@ -169,6 +171,7 @@ public class GraphicsController implements Initializable, Graphics {
 
     private void changeLeftPaneState(boolean state){
         inputTextField.setDisable(!state);
+        enterButton.setDisable(!state);
         baudRateBox.setDisable(state);
         commPortBox.setDisable(state);
         scanButton.setDisable(state);

@@ -1,5 +1,5 @@
 .root{
-    -fx-background-color: #D5DCDE;
+    -fx-background-color: #EDF1F2;
 }
 .button{
     -fx-text-fill: white;
@@ -10,14 +10,17 @@
 }
 .button:hover{
     -fx-background-color: #BF919B;
+    -fx-cursor: pointer;
+    -webkit-fx-transition: background .5s;
+    -fx-transition: background .5s;
 }
 .button:pressed{
     -fx-background-color: #DB516F;
 }
 .clearButton{
-    -fx-border-radius: 0;
-    -fx-background-radius: 1;
-    -fx-padding: 1;
+    -fx-border-radius: 2px;
+    -fx-background-radius: 2px;
+    -fx-padding: 2;
 }
 .text-area{
     -fx-border-radius: 1px;
@@ -27,7 +30,7 @@
 
 }
 .labelOrange{
-    -fx-text-fill: #6F7094;
+    -fx-text-fill: #6A778F;
 }
 .labelMax{
     -fx-text-fill: #6C73E0;
@@ -99,7 +102,6 @@
 }
 
 .toggle-button:hover {
-    /*-fx-text-fill: #d8d8d8;*/
     -fx-background-color: #BF919B;
 }
 
@@ -108,17 +110,7 @@
     -fx-border-color: #DB516F;
     -fx-border-width: 1,1;
     -fx-border-radius: 1px;
-    /*-fx-text-fill: #1d1d1d;*/
 }
-
-/*.toggle-button:selected:hover {
-    -fx-background-color: #BFE3C3;
-    -fx-text-fill: #1d1d1d;
-    -fx-border-color: #eee;
-}*/
-/*.toggle-button:disabled {
-    -fx-opacity: -fx-disabled-opacity;
-}*/
 .writeToggle-button{
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
@@ -128,10 +120,8 @@
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
 }
-
 .text-field{
     -fx-text-fill: #6C73E0;
     -fx-border-radius: 1;
     -fx-background-radius: 1;
-    -fx-background-color: #F0F5F4;
 }

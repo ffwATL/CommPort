@@ -22,7 +22,7 @@ public class SceneView extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(new File("src/main/java/root/controller/scene.fxml").toURI().toURL()); //for testing with IDEA
         Image ico = new Image("file:src/main/java/root/view/fxml/icon.png");  //for testing with IDEA
-        /*AnchorPane root = (AnchorPane) FXMLLoader.load(SceneView.class.getResource("fxml/scene.fxml")); //for deployment
+       /* AnchorPane root = (AnchorPane) FXMLLoader.load(SceneView.class.getResource("fxml/scene.fxml")); //for deployment
         Image ico = new Image(this.getClass().getResource("fxml/icon.png").toExternalForm()); //for deployment*/
         Scene scene = new Scene(root);
         primaryStage.getIcons().add(ico);

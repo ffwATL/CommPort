@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.shape.*?>
@@ -16,11 +17,11 @@
          <top>
             <Pane prefHeight="79.0" prefWidth="600.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label layoutX="198.0" layoutY="50.0" text="max H = " textFill="#5b5d85">
+                  <Label layoutX="198.0" layoutY="50.0" text="max H " textFill="#5b5d85">
                      <font>
                         <Font name="Consolas Bold" size="12.0" />
                      </font></Label>
-                  <Label layoutX="198.0" layoutY="33.0" text="max A = " textFill="#5b5d85">
+                  <Label layoutX="198.0" layoutY="33.0" text="max A " textFill="#5b5d85">
                      <font>
                         <Font name="Consolas Bold" size="12.0" />
                      </font></Label>
@@ -28,7 +29,7 @@
                      <font>
                         <Font name="Courier New" size="13.0" />
                      </font></Label>
-                  <Label layoutX="250.0" layoutY="49.0" styleClass="labelMax" text="0.0">
+                  <Label fx:id="maxLabelH" layoutX="250.0" layoutY="49.0" styleClass="labelMax" text="0.0">
                      <font>
                         <Font name="Courier New" size="13.0" />
                      </font></Label>
@@ -122,12 +123,14 @@
                      <font>
                         <Font name="Courier New Bold" size="11.0" />
                      </font></TextField>
-                  <Button fx:id="clearButton" layoutX="187.0" layoutY="1.0" mnemonicParsing="false" onAction="#clear" styleClass="clearButton" text="CL">
+                  <Button fx:id="clearButton" layoutX="185.0" layoutY="1.0" minHeight="-Infinity" mnemonicParsing="false" onAction="#clear" prefHeight="15.0" styleClass="clearButton" text="CS">
                      <font>
                         <Font name="System Bold" size="9.0" />
                      </font>
                   </Button>
                   <Label layoutX="3.0" layoutY="161.0" styleClass="labelOrange" text="Input line:" />
+                  <Button fx:id="enterButton" disable="true" layoutX="150.0" layoutY="160.0" mnemonicParsing="false" onAction="#inputTextFieldAction" prefWidth="20.0" />
+                  <Circle fill="WHITE" layoutX="160.0" layoutY="171.0" radius="4.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
                </children>
             </Pane>
          </center>
