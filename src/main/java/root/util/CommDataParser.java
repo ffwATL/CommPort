@@ -39,9 +39,11 @@ public class CommDataParser implements DataParser {
         StringBuilder builder = new StringBuilder();
         try {
             double[] parsed = parseSixByteArray(arr, data);
+            MAX_VALUE_A = 1;
+            MAX_VALUE_H = 1;
             if(parsed != null){
-                MAX_VALUE_A = parsed[0];
-                MAX_VALUE_H = parsed[1];
+                if(parsed[0] != 0) MAX_VALUE_A = parsed[0];
+                if(parsed[1] != 0) MAX_VALUE_H = parsed[1];
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -56,13 +58,13 @@ public class CommDataParser implements DataParser {
     }
 
     @Override
-    public double[] getDoublePosition(byte[] input, int data){
+    public Double[] getDoublePosition(byte[] input, int data){
         double [] parsed;
-        double[] position = null;
+        Double [] position = null;
         int c = 0;
         try {
             parsed = parseSixByteArray(input, data);
-            position = new double[parsed.length];
+            position = new Double[parsed.length];
             for(int i = 0; i < position.length; i++){
                 if(c++ % 2 == 0){
                     position[i] = 360.0 * (parsed[i] / MAX_VALUE_A);
@@ -77,11 +79,11 @@ public class CommDataParser implements DataParser {
     @Override
     public String getStringPosition(byte[] input, int data){
         StringBuilder builder = new StringBuilder();
-        double[] position = getDoublePosition(input, data);
+        Double [] position = getDoublePosition(input, data);
         builder.append("A: ");
         for (int i = 0; i < position.length; i++){
             if(i==0) builder.append(position[i]);
-            else builder.append("H: "+position[i]);
+            else builder.append(String.format("H: " + position[i]));
             if(i != position.length - 1) builder.append("\n");
         }
         return builder.toString();
