@@ -260,14 +260,14 @@ public class GraphicsController implements Initializable, Graphics {
             try{
                 l = new Integer(timerTextField.getText());
             }catch (NumberFormatException e){
-                logger.trace("trying to handle exception.. ");
+                logger.trace("trying to handle exception.. " + e.getMessage());
                 timerTextField.deletePreviousChar();
             }
         }else {
             try{
                 l = new Integer(inputTextField.getText());
             }catch (NumberFormatException e){
-                logger.trace("trying to handle exception.. ");
+                logger.trace("trying to handle exception.. " + e.getMessage());
                inputTextField.deletePreviousChar();
             }
         }

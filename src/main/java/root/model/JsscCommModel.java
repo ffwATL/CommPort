@@ -43,17 +43,19 @@ public class JsscCommModel extends CommAbstract {
             return true;
         } catch (SerialPortException e) {
             logger.error(e.getMessage());
+            return false;
         }
-        return false;
     }
 
     @Override
     public void write(String b) {
-        byte [] arr = {Byte.valueOf(b)};
-        String hex = DatatypeConverter.printHexBinary(arr);
         try {
+            byte [] arr = {Byte.valueOf(b)};
+            String hex = DatatypeConverter.printHexBinary(arr);
             serialPort.writeByte(Byte.valueOf(hex));
         } catch (SerialPortException e) {
+            logger.error(e.getMessage());
+        }catch (NumberFormatException e){
             logger.error(e.getMessage());
         }
     }
