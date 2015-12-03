@@ -13,6 +13,4 @@ public interface Ephem {
     public int getSecond();
 
     public String getKey();
-
-
 }

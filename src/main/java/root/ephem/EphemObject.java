@@ -5,7 +5,6 @@ public class EphemObject implements Ephem {
     private int hour;
     private int minute;
     private int second;
-
     private double a;
     private double h;
 

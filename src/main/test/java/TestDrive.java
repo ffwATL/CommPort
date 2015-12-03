@@ -8,17 +8,22 @@ import java.util.HashMap;
 
 public class TestDrive {
     private static Logger logger = LogManager.getLogger();
+
     static int count = 1;
+    static {
+        count =0;
+    }
 
     public static void main(String[]args) throws Exception {
-        HashMap<String, Ephem> map = new HashMap<>(2000);
+        /*HashMap<String, Ephem> map = new HashMap<>(2000);
         File file = new File("e:/comm_temp/ephem/GA610100.GAO");
         parseEphem(file, map);
-        /*logger.trace(map);*/
+        *//*logger.trace(map);*//*
         logger.trace(map.size());
         logger.trace("looking for.." + " 11 38  2");
         logger.trace("looking for.." + " 11 37  0");
         logger.trace(map.get("11 37  0"));
+*/
 
     }
     private static void parseEphem(File file, HashMap<String, Ephem> map){
