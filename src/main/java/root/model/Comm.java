@@ -3,6 +3,7 @@ package root.model;
 
 import jssc.SerialPortException;
 import root.controller.Graphics;
+import root.response.ResponseHandler;
 
 public interface Comm<T extends Graphics> {
 
@@ -11,6 +12,11 @@ public interface Comm<T extends Graphics> {
     T getGui();
 
     boolean connect(String portName, Integer baudRate);
+
+    void addResponseHandler(ResponseHandler responseHandler);
+    void removeResponseHandler(ResponseHandler responseHandler);
+
+    boolean isConnected();
 
     void write(String  b) throws SerialPortException;
     void write(int[] msg) throws SerialPortException;

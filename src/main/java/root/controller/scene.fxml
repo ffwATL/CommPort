@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.canvas.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.chart.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.*?>
 <?import java.lang.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.Bloom?>
+<?import javafx.scene.effect.BoxBlur?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.*?>
+
+<!--<?import root.controller.elements.NumberTextField?>-->
+
+<?import java.lang.String?>
 
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="1024.0" styleClass="root" stylesheets="@appCSS.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.controller.GraphicsController">
    <children>
@@ -105,7 +108,7 @@
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="600.0" snapToPixel="false" style="-fx-border-width: 0 1 0 1; -fx-border-color: #ddd; -fx-text-alignment: center;" BorderPane.alignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                  <Pane fx:id="centralPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="600.0" snapToPixel="false" style="-fx-border-width: 0 1 0 1; -fx-border-color: #ddd; -fx-text-alignment: center;" BorderPane.alignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                      <children>
                         <Separator layoutX="30.0" layoutY="23.0" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="200.0" />
                         <Label layoutX="35.0" layoutY="4.0" text="Impulse settings">
@@ -113,7 +116,7 @@
                               <Font size="12.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="inpulseCountInput" layoutX="35.0" layoutY="55.0" minHeight="-Infinity" prefHeight="20.0" prefWidth="90.0" text="1">
+                        <TextField fx:id="impulseCountInput" layoutX="35.0" layoutY="55.0" minHeight="-Infinity" prefHeight="20.0" prefWidth="90.0" text="1">
                            <font>
                               <Font size="10.0" />
                            </font>
@@ -143,13 +146,13 @@
                         </Label>
                         <HBox layoutX="143.0" layoutY="53.0" prefHeight="27.0" prefWidth="66.0" spacing="10.0">
                            <children>
-                              <ToggleButton fx:id="downButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0">
+                              <ToggleButton fx:id="downButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#downButtonAction" prefHeight="22.0" prefWidth="22.0">
                                  <styleClass>
                                     <String fx:value="down-btn" />
                                     <String fx:value="round-btn" />
                                  </styleClass>
                               </ToggleButton>
-                              <ToggleButton fx:id="upButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0">
+                              <ToggleButton fx:id="upButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#upButtonAction" prefHeight="22.0" prefWidth="22.0">
                                  <styleClass>
                                     <String fx:value="up-btn" />
                                     <String fx:value="round-btn" />
@@ -164,7 +167,7 @@
                            <children>
                               <HBox layoutY="90.0" prefHeight="41.0" prefWidth="200.0" spacing="8.0">
                                  <children>
-                                    <Button fx:id="readAzButton" lineSpacing="3.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="50.0" text="Read AZ" textAlignment="CENTER" HBox.hgrow="NEVER">
+                                    <Button fx:id="readAzButton" lineSpacing="3.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#readAz" prefHeight="18.0" prefWidth="50.0" text="Read AZ" textAlignment="CENTER" HBox.hgrow="NEVER">
                                        <font>
                                           <Font name="SansSerif Regular" size="11.0" />
                                        </font>

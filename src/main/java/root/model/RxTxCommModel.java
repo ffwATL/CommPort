@@ -69,6 +69,11 @@ public class RxTxCommModel extends CommAbstract {
     }
 
     @Override
+    public boolean isConnected() {
+        return false;
+    }
+
+    @Override
     public void write(String  b){
         logger.trace("starting conversion..");
         byte [] arr = {Byte.valueOf(b)};
