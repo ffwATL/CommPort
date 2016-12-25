@@ -51,8 +51,8 @@ public class CommDataParser implements DataParser {
         builder.append(MAX_VALUE_A);
         builder.append("   ");
         for (int i = 0; i < arr.length; i++){
-            builder.append((arr[i] & 0xff) + " ");
-            if(i == 2) builder.append("\n" + MAX_VALUE_H + "   ");
+            builder.append(arr[i] & 0xff).append(" ");
+            if(i == 2) builder.append("\n").append(MAX_VALUE_H).append("   ");
         }
         return builder.toString();
     }
@@ -83,7 +83,7 @@ public class CommDataParser implements DataParser {
         builder.append("A: ");
         for (int i = 0; i < position.length; i++){
             if(i==0) builder.append(position[i]);
-            else builder.append(String.format("H: " + position[i]));
+            else builder.append("H: ").append(position[i]);
             if(i != position.length - 1) builder.append("\n");
         }
         return builder.toString();

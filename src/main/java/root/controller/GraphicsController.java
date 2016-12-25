@@ -11,9 +11,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import jssc.SerialPortException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import root.model.Comm;
+import root.model.Command;
 import root.model.JsscCommModel;
 import root.util.CommUtilAbstract;
 import root.util.JsscCommUtil;
@@ -25,16 +27,10 @@ import java.util.ResourceBundle;
 public class GraphicsController implements Initializable, Graphics {
 
     private static final Logger logger = LogManager.getLogger();
-    private static final String FIRST = "1";
-    private static final String SECOND = "2";
-    private static final String THIRD = "3";
-    private static final String DEFAULT = FIRST;
-    private static final long DEFAULT_DELAY = 100;
 
-    private static final Comm commModel = JsscCommModel.getInstance();;
+    private static final Comm commModel = JsscCommModel.getInstance();
     private static CommUtilAbstract commUtil = JsscCommUtil.getInstance();
-    private static long delay = DEFAULT_DELAY;
-    private static String command = DEFAULT;
+
     private static boolean writeFile;
     private static String portName = "no device";
     private static final Logger writeFileLogger = LogManager.getLogger("fileLogger");
@@ -45,8 +41,7 @@ public class GraphicsController implements Initializable, Graphics {
     private ComboBox<String> commPortBox;
     @FXML
     private ComboBox<Integer> baudRateBox;
-    @FXML
-    private TextField inputTextField;
+
     @FXML
     private Button scanButton;
     @FXML
@@ -60,31 +55,10 @@ public class GraphicsController implements Initializable, Graphics {
     @FXML
     private Label connectStatusLabel;
     @FXML
-    private ComboBox<String> timeConfigBox;
-    @FXML
-    private ToggleButton setTimerButton;
-    @FXML
-    private TextField timerTextField;
-    @FXML
-    private ToggleButton  firstCommandButton;
-    @FXML
-    private ToggleButton  secondCommandButton;
-    @FXML
-    private ToggleButton  thirdCommandButton;
-    @FXML
-    private ToggleButton startButton;
-    @FXML
-    private ToggleButton writeLogButton;
-    @FXML
-    private Pane leftPane;
-    @FXML
     private Pane rightPane;
     @FXML
-    private Label maxLabelH;
-    @FXML
-    private Label maxLabelA;
-    @FXML
-    private Button enterButton;
+    private Button resetButton;
+
 
     private static boolean firstStart = true;
 
@@ -98,19 +72,13 @@ public class GraphicsController implements Initializable, Graphics {
 
     @Override
     public void updateTerminal(String s){
-        if(firstStart) setLabels(s);
-        else {
-            textArea.setText(s);
-            if(writeFile) writeLog(s.replace("\n","   "));
-        }
-        /*logger.trace("appended.. " +s);*/
-    }
+        /*if(firstStart) setLabels(s);*/
+       /* else {
 
-    private void setLabels(String s){
-        String[] parsed = s.split("\n");
-        if(parsed.length > 0) maxLabelA.setText(parsed[0]);
-        if(parsed.length > 1) maxLabelH.setText(parsed[1]);
-        firstStart = !firstStart;
+            if(writeFile) writeLog(s.replace("\n","   "));
+        }*/
+        textArea.appendText(s);
+        /*logger.trace("appended.. " +s);*/
     }
 
     @FXML
@@ -147,8 +115,8 @@ public class GraphicsController implements Initializable, Graphics {
         }
     }
 
-    public void inputTextFieldAction(ActionEvent event){
-        commModel.write(inputTextField.getText());
+    public void inputTextFieldAction(ActionEvent event) throws SerialPortException {
+       /* commModel.write(inputTextField.getText());*/
         /*inputTextField.setText("");*/
     }
 
@@ -163,19 +131,16 @@ public class GraphicsController implements Initializable, Graphics {
                 portName = s2;
             }
         });
-        timeConfigBox.setItems(commUtil.getTimeConfigList());
-        timeConfigBox.getSelectionModel().selectFirst();
-        baudRateBox.setItems(commUtil.getBaudRateList());
+        baudRateBox.setItems(CommUtilAbstract.getBaudRateList());
         baudRateBox.getSelectionModel().select(3);
     }
 
     private void changeLeftPaneState(boolean state){
-        inputTextField.setDisable(!state);
-        enterButton.setDisable(!state);
+
         baudRateBox.setDisable(state);
         commPortBox.setDisable(state);
         scanButton.setDisable(state);
-        changeRightPaneState(!state);
+
         if(state) {
             connectButton.setTooltip(new Tooltip("Close a connection"));
             connectButton.setText("Disconnect");
@@ -195,68 +160,24 @@ public class GraphicsController implements Initializable, Graphics {
         connect = state;
     }
 
-    private void changeRightPaneState(boolean state){
-        rightPane.setDisable(state);
-        if(firstCommandButton.isSelected()) firstCommandButton.setSelected(false);
-        if (secondCommandButton.isSelected()) secondCommandButton.setSelected(false);
-        if (thirdCommandButton.isSelected()) thirdCommandButton.setSelected(false);
-        if (setTimerButton.isSelected()) setTimerButton.setSelected(false);
-        if (startButton.isSelected()) startButton.setSelected(false);
-        if (writeLogButton.isSelected()) writeLogButton.setSelected(false);
-        if(state){
-            timerTextField.setDisable(!state);
-            timeConfigBox.setDisable(!state);
-            firstCommandButton.setTextFill(Color.web("#860000"));
-            secondCommandButton.setTextFill(Color.web("#860000"));
-            thirdCommandButton.setTextFill(Color.web("#860000"));
-        }
-    }
-
-    private void scanCommand(){
-        if(firstCommandButton.isSelected()) command = FIRST;
-        else if(secondCommandButton.isSelected()) command = SECOND;
-        else if(thirdCommandButton.isSelected()) command = THIRD;
-        else {
-            firstCommandButton.setSelected(true);
-            command = DEFAULT;
-        }
-    }
-
     @FXML
-    private void startButtonHandler(ActionEvent event){
-        if(!startButton.isSelected()){
-            commModel.stopExecutingCommand();
-            startButton.setText("Start");
-        }else{
-            scanCommand();
-            commModel.executeCommand(command, delay, delay, timeConfigBox.getValue()); // call executor.start();
-            startButton.setText("Stop");
-        }
+    private void resetButtonAction() throws SerialPortException {
+        commModel.write(Command.RESET_COMMAND_FIRST);
+        commModel.write(Command.RESET_COMMAND_SECOND);
     }
-
     @FXML
-    private void setTimerHandler(ActionEvent event){
-        String delayString = timerTextField.getText();
-        if(setTimerButton.isSelected()){
-            startButton.setDisable(false);
-            timeConfigBox.setDisable(true);
-            timerTextField.setDisable(true);
-            if(delayString.length() > 0) delay = new Long(delayString);
-            else {
-                delay = DEFAULT_DELAY;
-                timerTextField.setText(String.valueOf(DEFAULT_DELAY));
-            }
-        }else{
-            timerTextField.setDisable(false);
-            startButton.setDisable(true);
-            timeConfigBox.setDisable(false);
-        }
+     private void startFreqButtonAction() throws SerialPortException{
+        commModel.write(Command.START_FREQ);
+    }
+    @FXML
+    private void stopFreqButtonAction() throws SerialPortException{
+        commModel.write(Command.STOP_FREQ);
     }
 
     @FXML
     private void validateTextInput(KeyEvent event){
         Integer l;
-        if(event.getSource() == timerTextField){
+        /*if(event.getSource() == timerTextField){
             try{
                 l = new Integer(timerTextField.getText());
             }catch (NumberFormatException e){
@@ -270,21 +191,7 @@ public class GraphicsController implements Initializable, Graphics {
                 logger.trace("trying to handle exception.. " + e.getMessage());
                inputTextField.deletePreviousChar();
             }
-        }
-    }
-
-    @FXML
-    private void toggleCommandButtonHandler(ActionEvent event){
-        if(event.getSource() == firstCommandButton){
-            secondCommandButton.setSelected(false);
-            thirdCommandButton.setSelected(false);
-        }else if(event.getSource() == secondCommandButton){
-            firstCommandButton.setSelected(false);
-            thirdCommandButton.setSelected(false);
-        }else if(event.getSource() == thirdCommandButton){
-            firstCommandButton.setSelected(false);
-            secondCommandButton.setSelected(false);
-        }
+        }*/
     }
 
     private void initTooltips(){

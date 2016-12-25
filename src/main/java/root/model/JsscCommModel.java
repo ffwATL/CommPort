@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import root.util.CommDataParser;
 import root.util.DataParser;
 
-import javax.xml.bind.DatatypeConverter;
+import java.util.Arrays;
 
 public class JsscCommModel extends CommAbstract {
 
@@ -20,7 +20,6 @@ public class JsscCommModel extends CommAbstract {
     private static boolean firstStart = true;
 
     static {
-        DatatypeConverter.printInt(0);
         dataParser = CommDataParser.getInstance();
         CommDataParser.getInstance();
     }
@@ -48,15 +47,31 @@ public class JsscCommModel extends CommAbstract {
     }
 
     @Override
-    public void write(String b) {
+    public void write(String b) throws SerialPortException {
         try {
-            byte [] arr = {Byte.valueOf(b)};
-            String hex = DatatypeConverter.printHexBinary(arr);
-            serialPort.writeByte(Byte.valueOf(hex));
-        } catch (SerialPortException e) {
+            int [] arr = {255,0,234};
+            /*byte [] arr = {Byte.valueOf(b)};
+            String hex = DatatypeConverter.printHexBinary(arr);*/
+            Integer val = Integer.valueOf(b);
+            String hex = Integer.toHexString(val);
+            logger.info("hex: "+ hex);
+            serialPort.writeIntArray(arr);
+            /*serialPort.writeByte(Byte.valueOf(hex));*/
+        } catch (SerialPortException | NumberFormatException e) {
             logger.error(e.getMessage());
-        }catch (NumberFormatException e){
+            throw e;
+        }
+    }
+
+    @Override
+    public void write(int[] msg) throws SerialPortException {
+        try {
+            logger.info("Sending: "+ Arrays.toString(msg));
+            serialPort.writeIntArray(msg);
+            serialPort.sendBreak(50);
+        }catch (SerialPortException e){
             logger.error(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -84,15 +99,16 @@ public class JsscCommModel extends CommAbstract {
                     StringBuilder builder = new StringBuilder();
                     buffer = serialPort.readBytes();
                     if(firstStart){
-                        changeUI(dataParser.setMaxValues(buffer, buffer.length));
+                        /*changeUI(dataParser.setMaxValues(buffer, buffer.length));*/
                         firstStart = !firstStart;
                     }else {
                         for (byte b : buffer){
                             builder.append(b & 0xFF);
                             builder.append(" ");
                         }
+                        logger.info("response: "+ Arrays.toString(buffer));
                         builder.append("\n");
-                        builder.append(dataParser.getStringPosition(buffer, buffer.length));
+                        /*builder.append(dataParser.getStringPosition(buffer, buffer.length));*/
                         changeUI(builder.toString());
                     }
                 } catch (SerialPortException e) {

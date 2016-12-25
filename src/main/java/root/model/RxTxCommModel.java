@@ -1,6 +1,7 @@
 package root.model;
 
 import gnu.io.*;
+import jssc.SerialPortException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import root.controller.Graphics;
@@ -78,6 +79,11 @@ public class RxTxCommModel extends CommAbstract {
         }catch (IOException e){
             logger.error("can't write to COM port =/ "+e.getMessage());
         }
+    }
+
+    @Override
+    public void write(int[] msg) throws SerialPortException {
+        comm.write(msg);
     }
 
     @Override

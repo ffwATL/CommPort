@@ -1,21 +1,23 @@
 package root.model;
 
 
+import jssc.SerialPortException;
 import root.controller.Graphics;
 
 public interface Comm<T extends Graphics> {
 
-    public void setGui(T gui);
+    void setGui(T gui);
 
-    public T getGui();
+    T getGui();
 
-    public boolean connect(String portName, Integer baudRate);
+    boolean connect(String portName, Integer baudRate);
 
-    public void write(String  b);
+    void write(String  b) throws SerialPortException;
+    void write(int[] msg) throws SerialPortException;
 
-    public void close();
+    void close();
 
-    public void executeCommand(String send, long delay, long period, String factor);
+    void executeCommand(String send, long delay, long period, String factor);
 
-    public void stopExecutingCommand();
+    void stopExecutingCommand();
 }

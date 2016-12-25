@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.canvas.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.image.*?>
@@ -10,64 +11,90 @@
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
 
-<AnchorPane styleClass="root" stylesheets="@appCSS.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.controller.GraphicsController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="543.0" prefWidth="1024.0" styleClass="root" stylesheets="@appCSS.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.controller.GraphicsController">
    <children>
+     <!-- <fx:define>
+         <Image fx:id="btnUpImage" url="plus.png" />
+      </fx:define>-->
       <BorderPane layoutY="6.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
-            <Pane prefHeight="79.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+            <Pane prefHeight="38.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label layoutX="198.0" layoutY="50.0" text="max H " textFill="#5b5d85">
+                  <Circle fx:id="indicatorCircle" fill="#d30031" layoutX="14.0" layoutY="16.0" opacity="0.52" radius="6.0" stroke="#ffffff00" strokeType="INSIDE">
+                     <effect>
+                        <BoxBlur />
+                     </effect>
+                  </Circle>
+                  <Label fx:id="connectStatusLabel" layoutX="27.0" layoutY="8.0" text="Disconnected" textFill="#d30031">
                      <font>
-                        <Font name="Consolas Bold" size="12.0" />
-                     </font></Label>
-                  <Label layoutX="198.0" layoutY="33.0" text="max A " textFill="#5b5d85">
-                     <font>
-                        <Font name="Consolas Bold" size="12.0" />
-                     </font></Label>
-                  <Label fx:id="maxLabelA" layoutX="250.0" layoutY="33.0" styleClass="labelMax" text="0.0">
-                     <font>
-                        <Font name="Courier New" size="13.0" />
-                     </font></Label>
-                  <Label fx:id="maxLabelH" layoutX="250.0" layoutY="49.0" styleClass="labelMax" text="0.0">
-                     <font>
-                        <Font name="Courier New" size="13.0" />
-                     </font></Label>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
                </children></Pane>
          </top>
          <left>
             <Pane fx:id="leftPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <ComboBox fx:id="commPortBox" layoutX="10.0" layoutY="24.0" prefWidth="100.0">
-                     <effect>
-                        <Bloom threshold="0.91" />
-                     </effect>
-                  </ComboBox>
-                  <ComboBox fx:id="baudRateBox" layoutX="10.0" layoutY="71.0" prefWidth="100.0" visibleRowCount="5">
-                     <effect>
-                        <Bloom threshold="0.91" />
-                     </effect>
-                  </ComboBox>
-                  <Label layoutX="116.0" layoutY="28.0" styleClass="labelOrange" text="COM port" />
-                  <Label layoutX="116.0" layoutY="75.0" styleClass="labelOrange" text="Baud rate" />
-                  <Circle fx:id="indicatorCircle" fill="#d30031" layoutX="17.0" layoutY="10.0" opacity="0.52" radius="6.0" stroke="#ffffff00" strokeType="INSIDE">
-                     <effect>
-                        <BoxBlur />
-                     </effect>
-                  </Circle>
-                  <Label fx:id="connectStatusLabel" layoutX="30.0" layoutY="3.0" text="Disconnected" textFill="#d30031">
+                  <Separator layoutX="5.0" layoutY="250.0" prefWidth="190.0" />
+                  <Pane prefHeight="224.0" prefWidth="200.0">
+                     <children>
+                        <ComboBox fx:id="commPortBox" layoutX="50.0" layoutY="55.0" prefHeight="25.0" prefWidth="100.0">
+                           <effect>
+                              <Bloom threshold="0.91" />
+                           </effect>
+                        </ComboBox>
+                        <ComboBox fx:id="baudRateBox" layoutX="50.0" layoutY="110.0" prefHeight="25.0" prefWidth="100.0" visibleRowCount="5">
+                           <effect>
+                              <Bloom threshold="0.91" />
+                           </effect>
+                        </ComboBox>
+                        <Label layoutX="52.0" layoutY="40.0" styleClass="labelOrange" text="COM port">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="52.0" layoutY="95.0" styleClass="labelOrange" text="Baud rate">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="scanButton" layoutX="5.0" layoutY="180.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#scanPorts" prefHeight="22.0" prefWidth="80.0" stylesheets="@appCSS.css" text="Scan" textAlignment="CENTER">
+                           <font>
+                              <Font name="SansSerif Regular" size="12.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="connectButton" layoutX="115.0" layoutY="180.0" lineSpacing="3.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#connect" prefHeight="22.0" prefWidth="80.0" text="Connect" textAlignment="CENTER">
+                           <font>
+                              <Font name="SansSerif Regular" size="12.0" />
+                           </font>
+                        </Button>
+                        <Separator layoutX="5.0" layoutY="23.0" prefWidth="190.0" />
+                        <Label layoutX="10.0" layoutY="4.0" text="Connection settings">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="10.0" layoutY="230.0" text="Console">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
+                  <TextArea fx:id="textArea" editable="false" layoutX="3.0" layoutY="270.0" prefHeight="100.0" prefWidth="195.0">
                      <font>
-                        <Font size="10.0" />
+                        <Font name="Courier New Bold" size="13.0" />
                      </font>
-                  </Label>
-                  <ImageView fitHeight="160.0" fitWidth="145.0" layoutY="164.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@Bender_right_small.png" />
-                     </image>
                      <effect>
-                        <Glow level="0.53" />
-                     </effect>
-                  </ImageView>
+                        <Glow level="0.28" />
+                     </effect></TextArea>
+                  <Button fx:id="clearButton" layoutX="183.0" layoutY="270.0" minHeight="-Infinity" mnemonicParsing="false" onAction="#clear" prefHeight="15.0" styleClass="clearButton" text="CS">
+                     <font>
+                        <Font name="System Bold" size="9.0" />
+                     </font>
+                  </Button>
                </children>
             </Pane>
          </left>
@@ -100,37 +127,37 @@
             </Pane>
          </right>
          <center>
-            <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER_LEFT">
                <children>
-                  <Button fx:id="scanButton" layoutX="10.0" layoutY="230.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#scanPorts" prefHeight="22.0" prefWidth="80.0" stylesheets="@appCSS.css" text="Scan" textAlignment="CENTER">
+                  <Separator layoutX="30.0" layoutY="23.0" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="580.0" />
+                  <Label layoutX="35.0" layoutY="4.0" text="Main settings">
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="resetButton" layoutX="35.0" layoutY="110.0" lineSpacing="3.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="60.0" text="Reset" textAlignment="CENTER">
                      <font>
                         <Font name="SansSerif Regular" size="12.0" />
                      </font>
                   </Button>
-                  <Button fx:id="connectButton" layoutX="110.0" layoutY="230.0" lineSpacing="3.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#connect" prefHeight="22.0" prefWidth="80.0" text="Connect" textAlignment="CENTER">
+                  <ToggleButton fx:id="downButton" layoutX="35.0" layoutY="55.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0">
+                     <styleClass>
+                        <String fx:value="down-btn" />
+                        <String fx:value="round-btn" />
+                     </styleClass>
+                  </ToggleButton>
+                  <TextField fx:id="inpulseCountInput" layoutX="70.0" layoutY="55.0" minHeight="-Infinity" prefHeight="25.0" prefWidth="90.0" />
+                  <Label layoutX="70.0" layoutY="38.0" styleClass="labelOrange" text="Impulse count">
                      <font>
-                        <Font name="SansSerif Regular" size="12.0" />
+                        <Font size="12.0" />
                      </font>
-                  </Button>
-                  <TextArea fx:id="textArea" editable="false" prefHeight="101.0" prefWidth="200.0">
-                     <font>
-                        <Font name="Courier New Bold" size="13.0" />
-                     </font>
-                     <effect>
-                        <Glow level="0.28" />
-                     </effect></TextArea>
-                  <TextField fx:id="inputTextField" disable="true" layoutX="58.0" layoutY="160.0" onAction="#inputTextFieldAction" onKeyReleased="#validateTextInput" prefHeight="0.0" prefWidth="84.0">
-                     <font>
-                        <Font name="Courier New Bold" size="11.0" />
-                     </font></TextField>
-                  <Button fx:id="clearButton" layoutX="185.0" layoutY="1.0" minHeight="-Infinity" mnemonicParsing="false" onAction="#clear" prefHeight="15.0" styleClass="clearButton" text="CS">
-                     <font>
-                        <Font name="System Bold" size="9.0" />
-                     </font>
-                  </Button>
-                  <Label layoutX="3.0" layoutY="161.0" styleClass="labelOrange" text="Input line:" />
-                  <Button fx:id="enterButton" disable="true" layoutX="150.0" layoutY="160.0" mnemonicParsing="false" onAction="#inputTextFieldAction" prefWidth="20.0" />
-                  <Circle fill="WHITE" layoutX="160.0" layoutY="171.0" radius="4.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
+                  </Label>
+                  <ToggleButton fx:id="upButton" layoutX="172.0" layoutY="55.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0">
+                     <styleClass>
+                        <String fx:value="up-btn" />
+                        <String fx:value="round-btn" />
+                     </styleClass>
+                  </ToggleButton>
                </children>
             </Pane>
          </center>

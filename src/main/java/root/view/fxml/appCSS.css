@@ -7,6 +7,7 @@
     -fx-background-radius: 2;
     -fx-border-radius: 2px;
     -fx-padding: 2px;
+    /*-fx-background-image: url('plus.svg');;*/
 }
 .button:hover{
     -fx-background-color: #BF919B;
@@ -115,6 +116,32 @@
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
     -fx-font-size: 9px;
+}
+.round-btn{
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+}
+.up-btn, .down-btn{
+    -fx-background-color: transparent;
+    -fx-background-size: 22px;
+}
+.down-btn{
+    -fx-background-image: url('images/minus.png');
+}
+.down-btn:hover{
+    -fx-background-image: url('images/minus-hover.png');
+}
+.up-btn{
+    -fx-background-image: url('images/plus.png');
+}
+.up-btn:hover{
+    -fx-background-image: url('images/plus-hover.png');
+}
+.up-btn:selected{
+    -fx-background-image: url('images/plus-selected.png');
+}
+.down-btn:selected{
+    -fx-background-image: url('images/minus-selected.png');
 }
 .writeToggle-button:selected{
     -fx-border-radius: 10px;

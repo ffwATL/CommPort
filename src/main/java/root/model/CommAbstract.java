@@ -2,6 +2,7 @@ package root.model;
 
 
 import javafx.application.Platform;
+import jssc.SerialPortException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import root.controller.Graphics;
@@ -27,8 +28,8 @@ public abstract class CommAbstract implements Comm<Graphics> {
     }
 
     @Override
-    public void setGui(Graphics gui) {
-        this.gui = gui;
+    public void setGui(Graphics graphics) {
+        gui = graphics;
     }
 
     @Override
@@ -48,7 +49,11 @@ public abstract class CommAbstract implements Comm<Graphics> {
             public void run() {
                 executor.execute(new Runnable() {
                     public void run() {
-                        write(send);
+                        try {
+                            write(send);
+                        } catch (SerialPortException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
             }

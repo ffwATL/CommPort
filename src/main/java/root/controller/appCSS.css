@@ -7,16 +7,19 @@
     -fx-background-radius: 2;
     -fx-border-radius: 2px;
     -fx-padding: 2px;
+    /*-fx-background-image: url('plus.svg');;*/
 }
 .button:hover{
     -fx-background-color: #BF919B;
     -fx-cursor: pointer;
     -webkit-fx-transition: background .5s;
     -fx-transition: background .5s;
+    -fx-padding: 2px;
 }
 .button:pressed{
     -fx-background-color: #DB516F;
 }
+
 .clearButton{
     -fx-border-radius: 2px;
     -fx-background-radius: 2px;
@@ -42,7 +45,10 @@
     -fx-padding: 0.166667em; /* 2 */
     -fx-font-size: 12px;
 }
-
+.combo-box:selected{
+    -fx-padding: 0; /* 2 */
+    -fx-border-color: transparent;
+}
 .combo-box  .list-cell{
     -fx-text-fill: white;
 }
@@ -116,6 +122,37 @@
     -fx-background-radius: 10px;
     -fx-font-size: 9px;
 }
+.round-btn{
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+}
+.up-btn, .down-btn{
+    -fx-background-size: 22px;
+}
+.down-btn{
+    -fx-background-image: url('images/minus.png');
+}
+.down-btn:hover{
+    -fx-background-image: url('images/minus-hover.png');
+}
+.up-btn{
+    -fx-background-image: url('images/plus.png');
+}
+.up-btn:hover{
+    -fx-background-image: url('images/plus-hover.png');
+}
+.up-btn, .down-btn, .up-btn:hover, .up-btn:selected, .down-btn:selected, .down-btn:hover{
+    -fx-background-color: transparent;
+}
+.up-btn:selected, .down-btn:selected{
+    -fx-border-color: transparent;
+}
+.up-btn:selected{
+    -fx-background-image: url('images/plus-selected.png');
+}
+.down-btn:selected{
+    -fx-background-image: url('images/minus-selected.png');
+}
 .writeToggle-button:selected{
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
@@ -124,4 +161,11 @@
     -fx-text-fill: #6C73E0;
     -fx-border-radius: 1;
     -fx-background-radius: 1;
+}
+.tab-button{
+    -fx-font-size: 12px;
+    -fx-padding: 3px 10px;
+    -fx-pref-height: 30px;
+    -fx-pref-width: 100px;
+    -fx-text-alignment: center;
 }
