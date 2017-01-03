@@ -2,19 +2,21 @@
     -fx-background-color: #EDF1F2;
 }
 .button{
-    -fx-text-fill: white;
-    -fx-background-color: #84A2AB;
     -fx-background-radius: 2;
     -fx-border-radius: 2px;
-    -fx-padding: 2px;
     /*-fx-background-image: url('plus.svg');;*/
+}
+.button, .toggle-button{
+    -fx-text-fill: white;
+    -fx-background-color: #84A2AB;
+    -fx-cursor: pointer;
+    -fx-font-size: 11px;
+    -fx-padding: 0;
 }
 .button:hover{
     -fx-background-color: #BF919B;
-    -fx-cursor: pointer;
     -webkit-fx-transition: background .5s;
     -fx-transition: background .5s;
-    -fx-padding: 2px;
 }
 .button:pressed{
     -fx-background-color: #DB516F;
@@ -23,6 +25,8 @@
 .clearButton{
     -fx-border-radius: 2px;
     -fx-background-radius: 2px;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
     -fx-padding: 2;
 }
 .text-area{
@@ -98,9 +102,9 @@
 .toggle-button {
     -fx-background-radius: 2px;
     -fx-border-radius: 2px;
-    -fx-background-color: #5E7B8A;
-    -fx-font-size: 11px;
-    -fx-text-fill: white;
+   /* -fx-background-color: #5E7B8A;*/
+
+   /* -fx-text-fill: white;*/
 }
 
 .toggle-button:focused {
@@ -161,11 +165,4 @@
     -fx-text-fill: #6C73E0;
     -fx-border-radius: 1;
     -fx-background-radius: 1;
-}
-.tab-button{
-    -fx-font-size: 12px;
-    -fx-padding: 3px 10px;
-    -fx-pref-height: 30px;
-    -fx-pref-width: 100px;
-    -fx-text-alignment: center;
 }

@@ -5,6 +5,7 @@ import jssc.SerialPortException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import root.controller.Graphics;
+import root.response.ResponseHandler;
 import root.util.CommDataParser;
 import root.util.DataParser;
 
@@ -20,7 +21,6 @@ public class RxTxCommModel extends CommAbstract {
     private static Comm<Graphics> comm;
     private static OutputStream outputStream;
     private SerialPort serialPort;
-    private SerialReader serialReader;
     private static BufferedInputStream inputStream;
     private static DataParser dataParser;
 
@@ -46,7 +46,7 @@ public class RxTxCommModel extends CommAbstract {
                 serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
                 if(inputStream == null) inputStream = new BufferedInputStream(serialPort.getInputStream());
                 outputStream = serialPort.getOutputStream();
-                serialReader = new SerialReader();
+                SerialReader serialReader = new SerialReader();
                 serialPort.addEventListener(serialReader);
                 serialPort.notifyOnDataAvailable(true);
                 serialPort.setInputBufferSize(3);
@@ -69,11 +69,21 @@ public class RxTxCommModel extends CommAbstract {
     }
 
     @Override
+    public void addResponseHandler(ResponseHandler responseHandler) {
+
+    }
+
+    @Override
+    public void removeResponseHandlers() {
+
+    }
+
+    @Override
     public boolean isConnected() {
         return false;
     }
 
-    @Override
+    /*@Override
     public void write(String  b){
         logger.trace("starting conversion..");
         byte [] arr = {Byte.valueOf(b)};
@@ -84,11 +94,16 @@ public class RxTxCommModel extends CommAbstract {
         }catch (IOException e){
             logger.error("can't write to COM port =/ "+e.getMessage());
         }
-    }
+    }*/
 
     @Override
     public void write(int[] msg) throws SerialPortException {
         comm.write(msg);
+    }
+
+    @Override
+    public boolean sendBreak(int duration) {
+        return comm.sendBreak(duration);
     }
 
     @Override

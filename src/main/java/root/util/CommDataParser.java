@@ -1,8 +1,10 @@
 package root.util;
 
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import root.model.Command;
 
 public class CommDataParser implements DataParser {
 
@@ -10,6 +12,15 @@ public class CommDataParser implements DataParser {
     private static double MAX_VALUE_A/* = 1800000/2*/;
     private static double MAX_VALUE_H/* = 1800000/2*/;
     private static CommDataParser dataParser;
+
+    private final static char[] digits = {
+            '0' , '1' , '2' , '3' , '4' , '5' ,
+            '6' , '7' , '8' , '9' , 'a' , 'b' ,
+            'c' , 'd' , 'e' , 'f' , 'g' , 'h' ,
+            'i' , 'j' , 'k' , 'l' , 'm' , 'n' ,
+            'o' , 'p' , 'q' , 'r' , 's' , 't' ,
+            'u' , 'v' , 'w' , 'x' , 'y' , 'z'
+    };
 
     private CommDataParser(){}
 
@@ -87,5 +98,95 @@ public class CommDataParser implements DataParser {
             if(i != position.length - 1) builder.append("\n");
         }
         return builder.toString();
+    }
+
+    @Override
+    public int[] calculateFreq(int freq){
+        long n = Math.abs(10000000 / freq);
+        return convertLongToUnsignedIntegerArrayFreq(n, Command.SET_FREQUENCY);
+    }
+    @Override
+    public int[] convertLongToUnsignedIntegerArrayFreq(long value, final int command){
+
+        char[] hexArray = toHexCharArray(value);
+        int[] result = new int[4];
+        int count = 1;
+        result[0] = command;
+        StringBuilder builder = new StringBuilder();
+        for(int i=0; i< hexArray.length; i++){
+            builder.append(hexArray[i]);
+            if(builder.length() == 2 || i == hexArray.length - 1){
+                int arr_byte = Integer.parseInt(builder.toString(), 16);
+                result[count++] = arr_byte;
+                if(i < hexArray.length - 1) builder = new StringBuilder();
+            }
+        }
+        /*logger.info("before: "+ Arrays.toString(result));*/
+        count = result[1];
+        result[1] = result[2];
+        result[2] = count;
+        count = result[1];
+
+        result[1] = result[3];
+        result[3] = count;
+
+        return result;
+    }
+
+    @Override
+    public int[] convertLongToUnsignedIntegerArrayImpulse(long value, final int command){
+
+        char[] hexArray = toHexCharArray(value);
+        ArrayUtils.reverse(hexArray);
+        int count = 1;
+       /* int size = hexArray.length;
+        size = size % 2 > 0 ? (size + 1) / 2 + 1 : size / 2 + 1;*/
+
+        int[] result = new int[4];
+        result[0] = command;
+
+        StringBuilder builder = new StringBuilder();
+        for(int i=0; i < hexArray.length; i+=2){
+
+            if(i+1 < hexArray.length) builder.append(hexArray[i + 1]);
+            builder.append(hexArray[i]);
+            if(builder.length() == 2 || i == hexArray.length-1) {
+                int arr_byte = Integer.parseInt(builder.toString(), 16);
+                result[count++] = arr_byte;
+                if(i < hexArray.length-1){
+                    builder = new StringBuilder();
+                }
+            }
+        }
+        return result;
+    }
+
+
+    @Override
+    public char[]  toHexCharArray(long i) {
+        return toUnsignedString0(i, 4);
+    }
+
+    private char[] toUnsignedString0(long val, int shift) {
+        int mag = Long.SIZE - Long.numberOfLeadingZeros(val);
+        int chars = Math.max(((mag + (shift - 1)) / shift), 1);
+        char[] buf = new char[chars];
+
+        formatUnsignedLong(val, shift, buf, 0, chars);
+
+        // Use special constructor which takes over "buf".
+        return buf;
+    }
+
+    private int formatUnsignedLong(long val, int shift, char[] buf, int offset, int len) {
+        int charPos = len;
+        int radix = 1 << shift;
+        int mask = radix - 1;
+        do {
+            buf[offset + --charPos] = digits[((int) val) & mask];
+            val >>>= shift;
+        } while (val != 0 && charPos > 0);
+
+        return charPos;
     }
 }

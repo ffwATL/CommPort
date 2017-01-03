@@ -15,19 +15,16 @@ public class TestDrive {
     }
 
     public static void main(String[]args) throws Exception {
-        /*HashMap<String, Ephem> map = new HashMap<>(2000);
-        File file = new File("e:/comm_temp/ephem/GA610100.GAO");
-        parseEphem(file, map);
-        *//*logger.trace(map);*//*
-        logger.trace(map.size());
-        logger.trace("looking for.." + " 11 38  2");
-        logger.trace("looking for.." + " 11 37  0");
-        logger.trace(map.get("11 37  0"));
-*/
-
+        byte[] test = new byte[] {0, 39, 16};
+        System.err.println(valueOfThreeBytes(test));
     }
+
+    private static int valueOfThreeBytes(byte ... arr){
+        return ((0xFF & arr[0]) << 16) | ((0xFF & arr[1]) << 8) | (0xFF & arr[2]);
+    }
+
     private static void parseEphem(File file, HashMap<String, Ephem> map){
-        try(InputStream is = new FileInputStream(file);){
+        try(InputStream is = new FileInputStream(file)){
             InputStreamReader reader = new InputStreamReader(is);
             BufferedReader bf = new BufferedReader(reader);
             String line;

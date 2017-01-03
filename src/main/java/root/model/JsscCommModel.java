@@ -23,7 +23,7 @@ public class JsscCommModel extends CommAbstract {
     private static boolean firstStart = true;
 
     private boolean connected = false;
-    private volatile Queue<ResponseHandler> responseHandlers = new ConcurrentLinkedQueue<>();
+    private Queue<ResponseHandler> responseHandlers = new ConcurrentLinkedQueue<>();
 
     static {
         dataParser = CommDataParser.getInstance();
@@ -54,12 +54,14 @@ public class JsscCommModel extends CommAbstract {
 
     @Override
     public void addResponseHandler(ResponseHandler responseHandler) {
-        this.responseHandlers.add(responseHandler);
+       /* this.responseHandler= responseHandler;*/
+        responseHandlers.add(responseHandler);
     }
 
     @Override
-    public void removeResponseHandler(ResponseHandler responseHandler) {
-        this.responseHandlers.remove(responseHandler);
+    public void removeResponseHandlers() {
+        /*this.responseHandler=null;*/
+        responseHandlers.clear();
     }
 
     @Override
@@ -68,20 +70,13 @@ public class JsscCommModel extends CommAbstract {
     }
 
     @Override
-    public void write(String b) throws SerialPortException {
+    public boolean sendBreak(int duration){
         try {
-            int [] arr = {255,0,234};
-            /*byte [] arr = {Byte.valueOf(b)};
-            String hex = DatatypeConverter.printHexBinary(arr);*/
-            Integer val = Integer.valueOf(b);
-            String hex = Integer.toHexString(val);
-            logger.info("hex: "+ hex);
-            serialPort.writeIntArray(arr);
-            /*serialPort.writeByte(Byte.valueOf(hex));*/
-        } catch (SerialPortException | NumberFormatException e) {
-            logger.error(e.getMessage());
-            throw e;
+            return serialPort.sendBreak(duration);
+        } catch (SerialPortException e) {
+            e.printStackTrace();
         }
+        return false;
     }
 
     @Override
@@ -89,7 +84,6 @@ public class JsscCommModel extends CommAbstract {
         try {
             logger.info("Sending: "+ Arrays.toString(msg));
             serialPort.writeIntArray(msg);
-            serialPort.sendBreak(50);
         }catch (SerialPortException e){
             logger.error(e.getMessage());
             e.printStackTrace();
@@ -112,6 +106,7 @@ public class JsscCommModel extends CommAbstract {
     }
 
     private void responseHandler(int[] response){
+        /*responseHandler.handle(response);*/
         if(!responseHandlers.isEmpty()){
             responseHandlers.poll().handle(response);
         }
@@ -125,21 +120,16 @@ public class JsscCommModel extends CommAbstract {
 
             if(serialPortEvent.getEventValue() > 0){
                 try {
-                    StringBuilder builder = new StringBuilder();
                     buffer = serialPort.readBytes();
                     int[] response = new int[buffer.length];
 
                     for (int i=0; i< buffer.length; i++){
                         int unsignedByte = buffer[i] & 0xFF;
                         response[i] = unsignedByte;
-                        builder.append(unsignedByte);
-                        builder.append(" ");
                     }
                     logger.info("response: "+ Arrays.toString(buffer));
-
                     responseHandler(response);
-                    builder.append("\n");
-                    changeUI(builder.toString());
+
                 } catch (SerialPortException e) {
                     logger.error("SerialPortException is occurred: " + e.getMessage());
                 }

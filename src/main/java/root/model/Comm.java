@@ -14,12 +14,13 @@ public interface Comm<T extends Graphics> {
     boolean connect(String portName, Integer baudRate);
 
     void addResponseHandler(ResponseHandler responseHandler);
-    void removeResponseHandler(ResponseHandler responseHandler);
+    void removeResponseHandlers();
 
     boolean isConnected();
 
-    void write(String  b) throws SerialPortException;
     void write(int[] msg) throws SerialPortException;
+
+    boolean sendBreak(int duration);
 
     void close();
 

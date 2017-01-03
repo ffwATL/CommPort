@@ -84,12 +84,12 @@
          <bottom>
             <Pane prefHeight="63.0" prefWidth="600.0" style="-fx-background-color: #fff;" BorderPane.alignment="CENTER">
                <children>
-                  <Circle fx:id="indicatorCircle" fill="#d30031" layoutX="31.0" layoutY="30.0" opacity="0.52" radius="10.0" stroke="#ffffff00" strokeType="INSIDE">
+                  <Circle fx:id="indicatorCircle" fill="#d30031" layoutX="31.0" layoutY="35.0" opacity="0.52" radius="10.0" stroke="#ffffff00" strokeType="INSIDE">
                      <effect>
                         <BoxBlur height="7.0" iterations="2" width="7.0" />
                      </effect>
                   </Circle>
-                  <Label fx:id="connectStatusLabel" graphicTextGap="3.0" layoutX="52.0" layoutY="22.0" lineSpacing="2.0" opacity="0.44" text="Disconnected" textFill="#d30031">
+                  <Label fx:id="connectStatusLabel" graphicTextGap="3.0" layoutX="52.0" layoutY="28.0" lineSpacing="2.0" opacity="0.44" text="Disconnected" textFill="#d30031">
                      <font>
                         <Font size="10.0" />
                      </font>
@@ -144,47 +144,23 @@
                               <Font size="12.0" />
                            </font>
                         </Label>
-                        <HBox layoutX="143.0" layoutY="53.0" prefHeight="27.0" prefWidth="66.0" spacing="10.0">
+                        <AnchorPane layoutX="370.0" prefHeight="185.0" prefWidth="211.0">
                            <children>
-                              <ToggleButton fx:id="downButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#downButtonAction" prefHeight="22.0" prefWidth="22.0">
-                                 <styleClass>
-                                    <String fx:value="down-btn" />
-                                    <String fx:value="round-btn" />
-                                 </styleClass>
-                              </ToggleButton>
-                              <ToggleButton fx:id="upButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#upButtonAction" prefHeight="22.0" prefWidth="22.0">
-                                 <styleClass>
-                                    <String fx:value="up-btn" />
-                                    <String fx:value="round-btn" />
-                                 </styleClass>
-                              </ToggleButton>
-                           </children>
-                           <padding>
-                              <Insets left="5.0" />
-                           </padding>
-                        </HBox>
-                        <AnchorPane layoutX="370.0" prefHeight="200.0" prefWidth="200.0">
-                           <children>
-                              <HBox layoutY="90.0" prefHeight="41.0" prefWidth="200.0" spacing="8.0">
+                              <HBox layoutY="44.0" prefHeight="41.0" prefWidth="200.0" spacing="10.0">
                                  <children>
-                                    <Button fx:id="readAzButton" lineSpacing="3.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#readAz" prefHeight="18.0" prefWidth="50.0" text="Read AZ" textAlignment="CENTER" HBox.hgrow="NEVER">
+                                    <Button fx:id="readCountButton" lineSpacing="3.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#getImpulseCount" prefHeight="20.0" prefWidth="60.0" text="Get count" textAlignment="CENTER" HBox.hgrow="NEVER">
                                        <font>
                                           <Font name="SansSerif Regular" size="11.0" />
                                        </font>
                                     </Button>
-                                    <Button lineSpacing="3.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="50.0" text="03" textAlignment="CENTER" HBox.hgrow="NEVER">
+                                    <Button fx:id="resetButton" lineSpacing="3.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#resetButtonAction" prefHeight="20.0" prefWidth="60.0" text="Reset" textAlignment="CENTER" HBox.hgrow="NEVER">
                                        <font>
-                                          <Font name="SansSerif Regular" size="11.0" />
-                                       </font>
-                                    </Button>
-                                    <Button lineSpacing="3.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="50.0" text="04" textAlignment="CENTER" HBox.hgrow="NEVER">
-                                       <font>
-                                          <Font name="SansSerif Regular" size="11.0" />
+                                          <Font name="SansSerif Regular" size="10.0" />
                                        </font>
                                     </Button>
                                  </children>
                                  <padding>
-                                    <Insets left="10.0" top="10.0" />
+                                    <Insets left="5.0" top="10.0" />
                                  </padding>
                               </HBox>
                               <Label layoutX="5.0" layoutY="4.0" text="Action panel">
@@ -193,30 +169,84 @@
                                  </font>
                               </Label>
                               <Separator layoutY="23.0" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="200.0" />
-                              <HBox layoutY="43.0" prefHeight="41.0" prefWidth="200.0" spacing="8.0">
+                              <HBox layoutY="90.0" prefHeight="41.0" prefWidth="200.0" spacing="10.0">
+                                 <padding>
+                                    <Insets left="5.0" top="10.0" />
+                                 </padding>
                                  <children>
-                                    <Button fx:id="resetButton11" lineSpacing="3.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stopFreqButtonAction" prefHeight="18.0" prefWidth="50.0" text="Stop freq" textAlignment="CENTER" HBox.hgrow="NEVER">
+                                    <ToggleButton fx:id="stopFreqButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stopFreqButtonAction" prefHeight="20.0" prefWidth="60.0" text="Stop freq" />
+                                    <ToggleButton fx:id="startFreqButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#startFreqButtonAction" prefHeight="20.0" prefWidth="60.0" text="Start freq" />
+                                 </children>
+                              </HBox>
+                              <HBox layoutY="143.0" prefHeight="41.0" prefWidth="200.0">
+                                 <children>
+                                    <Button fx:id="countWithSettingsButton" disable="true" mnemonicParsing="false" onAction="#getCounterWithPreviousSettings" prefHeight="20.0" prefWidth="130.0" text="Count with settings">
                                        <font>
-                                          <Font name="SansSerif Regular" size="11.0" />
-                                       </font>
-                                    </Button>
-                                    <Button fx:id="resetButton1" lineSpacing="3.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#startFreqButtonAction" prefHeight="18.0" prefWidth="50.0" text="Start freq" textAlignment="CENTER" HBox.hgrow="NEVER">
-                                       <font>
-                                          <Font name="SansSerif Regular" size="11.0" />
-                                       </font>
-                                    </Button>
-                                    <Button fx:id="resetButton" lineSpacing="3.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#resetButtonAction" prefHeight="18.0" prefWidth="50.0" text="Reset" textAlignment="CENTER" HBox.hgrow="NEVER">
-                                       <font>
-                                          <Font name="SansSerif Regular" size="11.0" />
+                                          <Font name="Berlin Sans FB" size="18.0" />
                                        </font>
                                     </Button>
                                  </children>
                                  <padding>
-                                    <Insets left="10.0" top="10.0" />
+                                    <Insets left="5.0" top="10.0" />
                                  </padding>
                               </HBox>
                            </children>
                         </AnchorPane>
+                        <AnchorPane layoutX="30.0" layoutY="90.0" prefHeight="107.0" prefWidth="200.0">
+                           <children>
+                              <Label layoutX="5.0" layoutY="46.0" styleClass="labelOrange" text="Frequency, HZ">
+                                 <font>
+                                    <Font size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="freqInput" layoutX="5.0" layoutY="63.0" minHeight="-Infinity" prefHeight="20.0" prefWidth="90.0" text="1">
+                                 <font>
+                                    <Font size="10.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="5.0" layoutY="15.0" text="Frequency settings">
+                                 <font>
+                                    <Font size="12.0" />
+                                 </font>
+                              </Label>
+                              <Separator layoutY="35.0" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="200.0" />
+                              <ToggleButton fx:id="setFreqButton" layoutX="117.0" layoutY="63.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setFrequencyAction" prefHeight="20.0" prefWidth="60.0" text="Set freq" />
+                           </children>
+                        </AnchorPane>
+                        <VBox layoutX="142.0" layoutY="36.0" prefHeight="60.0" prefWidth="70.0" spacing="2.0">
+                           <children>
+                              <HBox prefHeight="27.0" prefWidth="66.0" spacing="10.0">
+                                 <children>
+                                    <ToggleButton fx:id="downButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#downButtonAction" prefHeight="22.0" prefWidth="22.0">
+                                       <styleClass>
+                                          <String fx:value="down-btn" />
+                                          <String fx:value="round-btn" />
+                                       </styleClass>
+                                    </ToggleButton>
+                                    <ToggleButton fx:id="upButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#upButtonAction" prefHeight="22.0" prefWidth="22.0">
+                                       <styleClass>
+                                          <String fx:value="up-btn" />
+                                          <String fx:value="round-btn" />
+                                       </styleClass>
+                                    </ToggleButton>
+                                 </children>
+                                 <padding>
+                                    <Insets left="3.0" />
+                                 </padding>
+                              </HBox>
+                              <ToggleButton fx:id="setImpulseButton" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="5.0" lineSpacing="3.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setImpulseCountAction" prefHeight="20.0" prefWidth="60.0" text="Set impulse" textAlignment="CENTER" textOverrun="CLIP">
+                                 <font>
+                                    <Font size="11.0" />
+                                 </font>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                              </ToggleButton>
+                           </children>
+                           <padding>
+                              <Insets left="5.0" top="5.0" />
+                           </padding>
+                        </VBox>
                      </children>
                      <opaqueInsets>
                         <Insets />

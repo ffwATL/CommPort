@@ -16,9 +16,10 @@ import org.apache.logging.log4j.Logger;
 import root.model.Comm;
 import root.model.Command;
 import root.model.JsscCommModel;
-import root.response.ReadAzResponseHandler;
-import root.response.ResponseHandler;
+import root.response.ReadCounterResponseHandler;
+import root.util.CommDataParser;
 import root.util.CommUtilAbstract;
+import root.util.DataParser;
 import root.util.JsscCommUtil;
 
 import java.net.URL;
@@ -32,6 +33,7 @@ public class GraphicsController implements Initializable, Graphics {
 
     private static final Comm<Graphics> commModel = JsscCommModel.getInstance();
     private static CommUtilAbstract commUtil = JsscCommUtil.getInstance();
+    private static final DataParser dataParser =CommDataParser.getInstance();
 
     private static boolean writeFile;
     private static String portName = "no device";
@@ -45,7 +47,10 @@ public class GraphicsController implements Initializable, Graphics {
     private ToggleButton downButton;
     @FXML
     private ToggleButton upButton;
-
+    @FXML
+    private ToggleButton stopFreqButton;
+    @FXML
+    private ToggleButton startFreqButton;
     @FXML
     private Button scanButton;
     @FXML
@@ -61,9 +66,15 @@ public class GraphicsController implements Initializable, Graphics {
     @FXML
     private Pane centralPane;
     @FXML
-    private Button resetButton;
-    @FXML
     private TextField impulseCountInput;
+    @FXML
+    private TextField freqInput;
+    @FXML
+    private Button countWithSettingsButton;
+    @FXML
+    private ToggleButton setImpulseButton;
+    @FXML
+    private ToggleButton setFreqButton;
 
     private static boolean firstStart = true;
 
@@ -77,7 +88,7 @@ public class GraphicsController implements Initializable, Graphics {
 
     @Override
     public void updateTerminal(String s){
-        textArea.appendText(s);
+        textArea.setText(s);
     }
 
     @FXML
@@ -105,7 +116,11 @@ public class GraphicsController implements Initializable, Graphics {
         commPortBox.getSelectionModel().selectFirst();
     }
 
-    public void connect(ActionEvent event){
+    /**
+     * Method handles "connect" & "disconnect" buttons event.
+     */
+    public void connect(ActionEvent event)/* throws IOException*/ {
+
         if (!commModel.isConnected() && commModel.connect(portName, baudRateBox.getValue())) {
             changeLeftPaneState(true);
             centralPane.setDisable(false);
@@ -117,15 +132,16 @@ public class GraphicsController implements Initializable, Graphics {
         }
     }
 
-    public void inputTextFieldAction(ActionEvent event) throws SerialPortException {
-       /* commModel.write(inputTextField.getText());*/
-        /*inputTextField.setText("");*/
-    }
-
+    /**
+     * Method handles "CS" button event. It clears output #textArea console.
+     */
     public void clear(ActionEvent event){
         textArea.setText("");
     }
 
+    /**
+     * Make comboBox initialization.
+     */
     private void comboBoxInitialization(){
         commPortBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -137,6 +153,10 @@ public class GraphicsController implements Initializable, Graphics {
         baudRateBox.getSelectionModel().select(3);
     }
 
+    /**
+     * Handles left pane state that depends on @param state.
+     * @param state
+     */
     private void changeLeftPaneState(boolean state){
 
         baudRateBox.setDisable(state);
@@ -159,27 +179,46 @@ public class GraphicsController implements Initializable, Graphics {
         }
     }
 
+    /**
+     * Handle "resetButton" event by sending "reset" command to the device.
+     * @throws SerialPortException
+     */
     @FXML
     private void resetButtonAction() throws SerialPortException {
         commModel.write(Command.RESET_COMMAND_FIRST);
+        commModel.sendBreak(50);
         commModel.write(Command.RESET_COMMAND_SECOND);
     }
 
+    /**
+     *
+     * @param event
+     * @throws SerialPortException
+     */
     @FXML
-     private void startFreqButtonAction() throws SerialPortException{
-        commModel.write(Command.START_FREQ);
+     private void startFreqButtonAction(ActionEvent event) throws SerialPortException{
+        if(startFreqButton.isSelected()){
+            handleUpDownButtons(startFreqButton, stopFreqButton);
+            commModel.write(Command.START_FREQ);
+        }
+
     }
     @FXML
-    private void stopFreqButtonAction() throws SerialPortException{
-        commModel.write(Command.STOP_FREQ);
+    private void stopFreqButtonAction(ActionEvent event) throws SerialPortException{
+        if(stopFreqButton.isSelected()){
+            handleUpDownButtons(stopFreqButton, startFreqButton);
+            commModel.write(Command.STOP_FREQ);
+        }
     }
+
     @FXML
     private void downButtonAction(ActionEvent event) throws SerialPortException {
         if(downButton.isSelected()){
-            handleUpDownButtons(downButton,upButton);
+            handleUpDownButtons(downButton, upButton);
             sendImpulseSettings(Command.DOWN_COMMAND);
         }
     }
+
     @FXML
     private void upButtonAction(ActionEvent event) throws SerialPortException {
         if(upButton.isSelected()){
@@ -188,23 +227,94 @@ public class GraphicsController implements Initializable, Graphics {
         }
     }
 
+    @FXML
+    private void setImpulseCountAction(ActionEvent event) throws SerialPortException {
+        ToggleButton source = (ToggleButton) event.getSource();
+        boolean isSelected = source.isSelected();
+
+        disableInputTextField(isSelected, impulseCountInput);
+        disableCountWithSettingsButton();
+
+        if(isSelected){
+            sendImpulseCount();
+        }
+    }
+
+    @FXML
+    private void setFrequencyAction(ActionEvent event) throws SerialPortException {
+        ToggleButton source = (ToggleButton) event.getSource();
+        boolean isSelected = source.isSelected();
+
+        disableInputTextField(isSelected, freqInput);
+        disableCountWithSettingsButton();
+
+        if(isSelected){
+            sendFrequency();
+        }
+    }
+    @FXML
+    private void getCounterWithPreviousSettings(){
+        sendImpulseCount();
+        commModel.sendBreak(20);
+        sendFrequency();
+        commModel.sendBreak(20);
+        getImpulseCount();
+    }
+
+    private void disableCountWithSettingsButton(){
+        countWithSettingsButton.setDisable(!(setFreqButton.isSelected() && setImpulseButton.isSelected()));
+    }
+
+    private void sendImpulseCount(){
+        long impulseCount = Long.valueOf(impulseCountInput.getText());
+        int[] message = dataParser.convertLongToUnsignedIntegerArrayImpulse(impulseCount, Command.SET_IMPULSE_COUNT);
+        int tmp = message[1];
+
+        message[1] = message[3];
+        message[3] = tmp;
+        tmp = message[3];
+        message[3] = message[2];
+        message[2] = tmp;
+
+        try {
+            commModel.write(message);
+        } catch (SerialPortException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendFrequency(){
+        int freq = Integer.parseInt(freqInput.getText());
+        int[] message = dataParser.calculateFreq(freq);
+
+        try {
+            commModel.write(message);
+        } catch (SerialPortException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void disableInputTextField(boolean disable, TextField textField){
+        textField.setDisable(disable);
+    }
+
     private void handleUpDownButtons(ToggleButton pressed, ToggleButton released){
         released.setSelected(!pressed.isSelected());
     }
 
     private void sendImpulseSettings(int[] command) throws SerialPortException {
         System.err.println("Input field: " + impulseCountInput.getText() + ", command: " + Arrays.toString(command));
-        /*commModel.write(command);*/
+        commModel.write(command);
     }
+
     @FXML
-    private void readAz() {
-        ResponseHandler responseHandler = new ReadAzResponseHandler();
+    private void getImpulseCount() {
         try{
-            commModel.addResponseHandler(new ReadAzResponseHandler());
-            commModel.write(Command.READ_AZ);
+            commModel.addResponseHandler(new ReadCounterResponseHandler(this));
+            commModel.write(Command.GET_COUNTER);
         }catch (SerialPortException e){
             e.printStackTrace();
-            commModel.removeResponseHandler(responseHandler);
+            commModel.removeResponseHandlers();
         }
     }
 

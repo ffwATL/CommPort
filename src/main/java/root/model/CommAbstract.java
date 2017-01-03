@@ -2,7 +2,6 @@ package root.model;
 
 
 import javafx.application.Platform;
-import jssc.SerialPortException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import root.controller.Graphics;
@@ -43,24 +42,24 @@ public abstract class CommAbstract implements Comm<Graphics> {
         timer.scheduleAtFixedRate(getTimerTask(), delay, period);
     }
 
-    private TimerTask getTimerTask(){
+    private synchronized TimerTask getTimerTask(){
         return timerTask == null ? timerTask = new TimerTask() {
             @Override
             public void run() {
                 executor.execute(new Runnable() {
                     public void run() {
-                        try {
+                        /*try {
                             write(send);
                         } catch (SerialPortException e) {
                             e.printStackTrace();
-                        }
+                        }*/
                     }
                 });
             }
         } : timerTask;
     }
 
-    public static void changeUI(String input){
+    public static void changeUI(final String input){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -85,4 +84,6 @@ public abstract class CommAbstract implements Comm<Graphics> {
         timer = null;
         executor = null;
     }
+
+    /*abstract void removeResponseHandlers();*/
 }
