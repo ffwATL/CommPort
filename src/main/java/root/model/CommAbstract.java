@@ -2,10 +2,11 @@ package root.model;
 
 
 import javafx.application.Platform;
+import jssc.SerialPortException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import root.controller.Graphics;
-import root.util.CommUtilAbstract;
+import root.response.ResponseHandler;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -19,7 +20,7 @@ public abstract class CommAbstract implements Comm<Graphics> {
     private static Timer timer;
     private static ExecutorService executor;
     private static TimerTask timerTask;
-    private String send;
+    private int[] send;
 
     @Override
     public Graphics getGui(){
@@ -32,27 +33,30 @@ public abstract class CommAbstract implements Comm<Graphics> {
     }
 
     @Override
-    public void executeCommand(String send, long delay, long period, String factor){
-        int f = CommUtilAbstract.getTimeConfigMap().get(factor);
+    public void executeCommand(final int[] send, long period, ResponseHandler responseHandler){
+        long delay = period;
+        /*int f = CommUtilAbstract.getTimeConfigMap().get(factor);
         delay *= f;
-        period = delay;
+         period = delay;*/
+
         executor = Executors.newCachedThreadPool();
         timer = new Timer();
         this.send = send;
-        timer.scheduleAtFixedRate(getTimerTask(), delay, period);
+        timer.scheduleAtFixedRate(getTimerTask(responseHandler), delay, period);
     }
 
-    private synchronized TimerTask getTimerTask(){
+    private synchronized TimerTask getTimerTask(ResponseHandler responseHandler){
         return timerTask == null ? timerTask = new TimerTask() {
             @Override
             public void run() {
                 executor.execute(new Runnable() {
                     public void run() {
-                        /*try {
+                        try {
+                            addResponseHandler(responseHandler);
                             write(send);
                         } catch (SerialPortException e) {
                             e.printStackTrace();
-                        }*/
+                        }
                     }
                 });
             }

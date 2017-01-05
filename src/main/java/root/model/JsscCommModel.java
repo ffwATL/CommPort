@@ -39,6 +39,7 @@ public class JsscCommModel extends CommAbstract {
     @Override
     public boolean connect(String portName, Integer baudRate) {
         serialPort = new SerialPort(portName);
+
         try {
             serialPort.openPort();
             serialPort.setParams(baudRate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
@@ -81,9 +82,14 @@ public class JsscCommModel extends CommAbstract {
 
     @Override
     public void write(int[] msg) throws SerialPortException {
+
         try {
-            logger.info("Sending: "+ Arrays.toString(msg));
-            serialPort.writeIntArray(msg);
+            logger.info("acquiring a lock..");
+            synchronized (serialPort){
+                logger.info("Sending: " + Arrays.toString(msg));
+                serialPort.writeIntArray(msg);
+            }
+
         }catch (SerialPortException e){
             logger.error(e.getMessage());
             e.printStackTrace();

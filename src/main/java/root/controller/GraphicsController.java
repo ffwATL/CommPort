@@ -16,7 +16,11 @@ import org.apache.logging.log4j.Logger;
 import root.model.Comm;
 import root.model.Command;
 import root.model.JsscCommModel;
-import root.response.ReadCounterResponseHandler;
+import root.model.property.CommandProperty;
+import root.response.CounterResponseHandler;
+import root.response.ResponseHandler;
+import root.response.ResponseHandlerFactory;
+import root.response.ResponseHandlerType;
 import root.util.CommDataParser;
 import root.util.CommUtilAbstract;
 import root.util.DataParser;
@@ -56,7 +60,7 @@ public class GraphicsController implements Initializable, Graphics {
     @FXML
     private Button connectButton;
     @FXML
-    private TextArea textArea;
+    private TextArea counterTextArea;
     @FXML
     private Circle indicatorCircle;
     @FXML
@@ -65,6 +69,8 @@ public class GraphicsController implements Initializable, Graphics {
     private Label connectStatusLabel;
     @FXML
     private Pane centralPane;
+    @FXML
+    private Pane rightPane;
     @FXML
     private TextField impulseCountInput;
     @FXML
@@ -75,6 +81,20 @@ public class GraphicsController implements Initializable, Graphics {
     private ToggleButton setImpulseButton;
     @FXML
     private ToggleButton setFreqButton;
+    @FXML
+    private TextField timerPeriodTextField;
+
+    @FXML
+    private ToggleButton countTimerButton;
+    @FXML
+    private ToggleButton angleTimerButton;
+    @FXML
+    private ToggleButton startTimerButton;
+
+    @FXML
+    private Pane timerOptionsPane;
+
+    @FXML TextArea angleTextArea;
 
     private static boolean firstStart = true;
 
@@ -88,7 +108,7 @@ public class GraphicsController implements Initializable, Graphics {
 
     @Override
     public void updateTerminal(String s){
-        textArea.setText(s);
+        counterTextArea.setText(s);
     }
 
     @FXML
@@ -124,18 +144,32 @@ public class GraphicsController implements Initializable, Graphics {
         if (!commModel.isConnected() && commModel.connect(portName, baudRateBox.getValue())) {
             changeLeftPaneState(true);
             centralPane.setDisable(false);
+            rightPane.setDisable(false);
         }else{
+            startTimerButton.setSelected(false);
+            rightPane.setDisable(true);
             changeLeftPaneState(false);
             centralPane.setDisable(true);
+
+            commModel.stopExecutingCommand();
             commModel.close();
             firstStart = !firstStart;
         }
     }
 
     /**
-     * Method handles "CS" button event. It clears output #textArea console.
+     * Method handles "CS" button event. It clears output #counterTextArea console.
      */
-    public void clear(ActionEvent event){
+    @FXML
+    private void clearCounterConsoleButtonAction(ActionEvent event){
+        clearTextArea(counterTextArea);
+    }
+    @FXML
+    private void clearAngleConsoleButtonAction(ActionEvent event){
+        clearTextArea(angleTextArea);
+    }
+
+    public void clearTextArea(TextArea textArea){
         textArea.setText("");
     }
 
@@ -252,21 +286,54 @@ public class GraphicsController implements Initializable, Graphics {
             sendFrequency();
         }
     }
+
+    @FXML
+    private void counterTimerButtonAction(ActionEvent event){
+        ToggleButton source = (ToggleButton) event.getSource();
+        handleUpDownButtons(source, angleTimerButton);
+    }
+
+    @FXML
+    private void angleTimerButtonAction(ActionEvent event){
+        ToggleButton source = (ToggleButton) event.getSource();
+        handleUpDownButtons(source, countTimerButton);
+    }
+
+    @FXML
+    private void startTimer(ActionEvent event){
+        ToggleButton source = (ToggleButton) event.getSource();
+        boolean selected = source.isSelected();
+
+        timerPeriodTextField.setDisable(selected);
+        timerOptionsPane.setDisable(selected);
+        if(selected){
+            CommandProperty property = getCommandForTimer();
+            long period = Long.valueOf(timerPeriodTextField.getText());
+            if(property.getCommand() == Command.GET_COUNTER){
+                getCounterWithPreviousSettings();
+            }
+            commModel.executeCommand(property.getCommand(), period, property.getResponseHandler());
+        }else {
+            commModel.stopExecutingCommand();
+        }
+
+    }
+
     @FXML
     private void getCounterWithPreviousSettings(){
         sendImpulseCount();
         commModel.sendBreak(20);
         sendFrequency();
-        commModel.sendBreak(20);
-        getImpulseCount();
     }
 
     private void disableCountWithSettingsButton(){
-        countWithSettingsButton.setDisable(!(setFreqButton.isSelected() && setImpulseButton.isSelected()));
+        boolean state = !(setFreqButton.isSelected() && setImpulseButton.isSelected());
+        countWithSettingsButton.setDisable(state);
+        startTimerButton.setDisable(state);
     }
 
     private void sendImpulseCount(){
-        long impulseCount = Long.valueOf(impulseCountInput.getText());
+        long impulseCount = Long.valueOf(impulseCountInput.getText())-1;
         int[] message = dataParser.convertLongToUnsignedIntegerArrayImpulse(impulseCount, Command.SET_IMPULSE_COUNT);
         int tmp = message[1];
 
@@ -294,6 +361,8 @@ public class GraphicsController implements Initializable, Graphics {
         }
     }
 
+
+
     private void disableInputTextField(boolean disable, TextField textField){
         textField.setDisable(disable);
     }
@@ -310,7 +379,7 @@ public class GraphicsController implements Initializable, Graphics {
     @FXML
     private void getImpulseCount() {
         try{
-            commModel.addResponseHandler(new ReadCounterResponseHandler(this));
+            commModel.addResponseHandler(new CounterResponseHandler(this));
             commModel.write(Command.GET_COUNTER);
         }catch (SerialPortException e){
             e.printStackTrace();
@@ -325,4 +394,21 @@ public class GraphicsController implements Initializable, Graphics {
         clearButton.setTooltip(new Tooltip("Clear console"));
         connectButton.setTooltip(new Tooltip("Make a connection to selected COM"));
     }
+
+    private CommandProperty getCommandForTimer(){
+        int [] command;
+        ResponseHandler handler;
+
+        if(countTimerButton.isSelected()){
+            command = Command.GET_COUNTER;
+            handler = ResponseHandlerFactory.getInstance(ResponseHandlerType.COUNTER_HANDLER, this);
+        }else if(angleTimerButton.isSelected()){
+            command = Command.GET_ANGLE;
+            handler = ResponseHandlerFactory.getInstance(ResponseHandlerType.ANGLE_HANDLER, this);
+        }else throw new IllegalStateException("Wrong timer option");
+
+        return new CommandProperty(command, handler);
+    }
+
+
 }

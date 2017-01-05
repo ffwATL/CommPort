@@ -24,7 +24,7 @@ public interface Comm<T extends Graphics> {
 
     void close();
 
-    void executeCommand(String send, long delay, long period, String factor);
+    void executeCommand(int[] send, long period, ResponseHandler responseHandler);
 
     void stopExecutingCommand();
 }

@@ -15,8 +15,44 @@ public class TestDrive {
     }
 
     public static void main(String[]args) throws Exception {
-        byte[] test = new byte[] {0, 39, 16};
+        Integer s1 = 0;
+        Integer s2 = 7;
+        Integer s3 = 208;
+
+        byte[] test = new byte[] {s1.byteValue(),s2.byteValue(), s3.byteValue()};
+        int res = s1*256+s2*16+s3;
+        byte[] aa = hex2ByteArray("7d0");
+        int[] qq = new int[aa.length];
+        for(int i=0; i< aa.length; i++){
+            qq[i] = aa[i] &0xFF;
+        }
         System.err.println(valueOfThreeBytes(test));
+    }
+
+
+    public static byte[] hex2ByteArray( String input ) {
+        int len = input.length();
+
+        if (len == 0) {
+            return new byte[] {};
+        }
+
+        byte[] data;
+        int startIdx;
+        if (len % 2 != 0) {
+            data = new byte[(len / 2) + 1];
+            data[0] = (byte) Character.digit(input.charAt(0), 16);
+            startIdx = 1;
+        } else {
+            data = new byte[len / 2];
+            startIdx = 0;
+        }
+
+        for (int i = startIdx; i < len; i += 2) {
+            data[(i + 1) / 2] = (byte) ((Character.digit(input.charAt(i), 16) << 4)
+                    + Character.digit(input.charAt(i+1), 16));
+        }
+        return data;
     }
 
     private static int valueOfThreeBytes(byte ... arr){

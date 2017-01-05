@@ -5,13 +5,13 @@ import root.controller.Graphics;
 
 import java.util.Arrays;
 
-public class ReadCounterResponseHandler implements ResponseHandler{
+public class CounterResponseHandler implements ResponseHandler{
 
     private final Graphics GUI;
 
     private int[] response;
 
-    public ReadCounterResponseHandler(Graphics gui){
+    public CounterResponseHandler(Graphics gui){
         this.GUI = gui;
     }
 
@@ -29,7 +29,7 @@ public class ReadCounterResponseHandler implements ResponseHandler{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ReadCounterResponseHandler that = (ReadCounterResponseHandler) o;
+        CounterResponseHandler that = (CounterResponseHandler) o;
 
         return Arrays.equals(response, that.response);
 
@@ -42,7 +42,7 @@ public class ReadCounterResponseHandler implements ResponseHandler{
 
     @Override
     public String toString() {
-        return "ReadCounterResponseHandler{" +
+        return "CounterResponseHandler{" +
                 "response=" + Arrays.toString(response) +
                 " hashcode: "+ hashCode()+
                 '}';

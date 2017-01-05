@@ -6,6 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import root.model.Command;
 
+import java.util.Arrays;
+
 public class CommDataParser implements DataParser {
 
     private static final Logger logger = LogManager.getLogger();
@@ -111,24 +113,40 @@ public class CommDataParser implements DataParser {
         char[] hexArray = toHexCharArray(value);
         int[] result = new int[4];
         int count = 1;
+
         result[0] = command;
         StringBuilder builder = new StringBuilder();
+
         for(int i=0; i< hexArray.length; i++){
+            if(i == 0 && (hexArray.length % 2) >0 ) {
+                builder.append('0');
+            }
             builder.append(hexArray[i]);
             if(builder.length() == 2 || i == hexArray.length - 1){
-                int arr_byte = Integer.parseInt(builder.toString(), 16);
+                String r = builder.toString();
+                int arr_byte = Integer.parseInt(r, 16);
+                System.err.println("arr_byte: " + arr_byte);
                 result[count++] = arr_byte;
                 if(i < hexArray.length - 1) builder = new StringBuilder();
             }
         }
-        /*logger.info("before: "+ Arrays.toString(result));*/
-        count = result[1];
-        result[1] = result[2];
-        result[2] = count;
-        count = result[1];
+        logger.info("before swap: "+ Arrays.toString(result));
+        logger.info("hex: "+ Arrays.toString(hexArray));
+       /* try {
+            logger.info("byte array: "+ Arrays.toString( Hex.decodeHex(hexArray)));
+        } catch (DecoderException e) {
+            e.printStackTrace();
+        }*/
+        if(hexArray.length < 5){
+            count = result[1];
+            result[1] = result[2];
+            result[2] = count;
+            count = result[1];
 
-        result[1] = result[3];
-        result[3] = count;
+            result[1] = result[3];
+            result[3] = count;
+        }
+
 
         return result;
     }

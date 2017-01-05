@@ -12,6 +12,7 @@
     -fx-cursor: pointer;
     -fx-font-size: 11px;
     -fx-padding: 0;
+
 }
 .button:hover{
     -fx-background-color: #BF919B;
@@ -30,12 +31,16 @@
     -fx-padding: 2;
 }
 .text-area{
+    -fx-text-alignment: center;
     -fx-border-radius: 1px;
     -fx-padding: 1px;
     -fx-background-color: #A1C2CC;
     -fx-text-fill: #8F2154;
 
 }
+/*.text-area *.text {
+    -fx-text-alignment: center;
+}*/
 .labelOrange{
     -fx-text-fill: #6A778F;
 }
