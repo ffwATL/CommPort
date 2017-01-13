@@ -6,8 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import root.model.Command;
 
-import java.util.Arrays;
-
 public class CommDataParser implements DataParser {
 
     private static final Logger logger = LogManager.getLogger();
@@ -123,20 +121,14 @@ public class CommDataParser implements DataParser {
             }
             builder.append(hexArray[i]);
             if(builder.length() == 2 || i == hexArray.length - 1){
-                String r = builder.toString();
-                int arr_byte = Integer.parseInt(r, 16);
-                System.err.println("arr_byte: " + arr_byte);
+                int arr_byte = Integer.parseInt(builder.toString(), 16);
                 result[count++] = arr_byte;
+
                 if(i < hexArray.length - 1) builder = new StringBuilder();
             }
         }
-        logger.info("before swap: "+ Arrays.toString(result));
-        logger.info("hex: "+ Arrays.toString(hexArray));
-       /* try {
-            logger.info("byte array: "+ Arrays.toString( Hex.decodeHex(hexArray)));
-        } catch (DecoderException e) {
-            e.printStackTrace();
-        }*/
+        /*logger.info("before swap: "+ Arrays.toString(result));
+        logger.info("hex: "+ Arrays.toString(hexArray));*/
         if(hexArray.length < 5){
             count = result[1];
             result[1] = result[2];
@@ -157,8 +149,6 @@ public class CommDataParser implements DataParser {
         char[] hexArray = toHexCharArray(value);
         ArrayUtils.reverse(hexArray);
         int count = 1;
-       /* int size = hexArray.length;
-        size = size % 2 > 0 ? (size + 1) / 2 + 1 : size / 2 + 1;*/
 
         int[] result = new int[4];
         result[0] = command;

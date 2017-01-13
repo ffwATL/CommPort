@@ -21,7 +21,7 @@ public class CounterResponseHandler implements ResponseHandler{
 
         int r = response[2] * 256 + response[1];
 
-        GUI.updateTerminal(String.valueOf(r));
+        GUI.updateFirstTerminal(String.valueOf(r));
     }
 
     @Override

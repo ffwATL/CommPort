@@ -70,7 +70,7 @@ public abstract class CommAbstract implements Comm<Graphics> {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        gui.updateTerminal(input);
+                        gui.updateFirstTerminal(input);
                     }
                 });
             }

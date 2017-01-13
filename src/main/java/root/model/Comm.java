@@ -20,6 +20,8 @@ public interface Comm<T extends Graphics> {
 
     void write(int[] msg) throws SerialPortException;
 
+    int getQueueSize();
+
     boolean sendBreak(int duration);
 
     void close();

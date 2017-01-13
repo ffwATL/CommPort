@@ -102,6 +102,11 @@ public class RxTxCommModel extends CommAbstract {
     }
 
     @Override
+    public int getQueueSize() {
+        return 0;
+    }
+
+    @Override
     public boolean sendBreak(int duration) {
         return comm.sendBreak(duration);
     }

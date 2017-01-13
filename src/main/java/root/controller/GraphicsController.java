@@ -16,17 +16,21 @@ import org.apache.logging.log4j.Logger;
 import root.model.Comm;
 import root.model.Command;
 import root.model.JsscCommModel;
+import root.model.file.FileSaver;
+import root.model.file.FileSaverStringImpl;
+import root.model.file.Message;
+import root.model.file.MessageImpl;
 import root.model.property.CommandProperty;
-import root.response.CounterResponseHandler;
-import root.response.ResponseHandler;
-import root.response.ResponseHandlerFactory;
-import root.response.ResponseHandlerType;
+import root.response.*;
 import root.util.CommDataParser;
 import root.util.CommUtilAbstract;
 import root.util.DataParser;
 import root.util.JsscCommUtil;
 
+import java.io.File;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
@@ -90,6 +94,10 @@ public class GraphicsController implements Initializable, Graphics {
     private ToggleButton angleTimerButton;
     @FXML
     private ToggleButton startTimerButton;
+    @FXML
+    private TextField fileNameInput;
+    @FXML
+    private Label saveFileLabel;
 
     @FXML
     private Pane timerOptionsPane;
@@ -107,8 +115,13 @@ public class GraphicsController implements Initializable, Graphics {
     }
 
     @Override
-    public void updateTerminal(String s){
+    public void updateFirstTerminal(String s){
         counterTextArea.setText(s);
+    }
+
+    @Override
+    public void updateSecondTerminal(String s) {
+        angleTextArea.setText(s);
     }
 
     @FXML
@@ -314,6 +327,7 @@ public class GraphicsController implements Initializable, Graphics {
             }
             commModel.executeCommand(property.getCommand(), period, property.getResponseHandler());
         }else {
+            commModel.removeResponseHandlers();
             commModel.stopExecutingCommand();
         }
 
@@ -379,12 +393,69 @@ public class GraphicsController implements Initializable, Graphics {
     @FXML
     private void getImpulseCount() {
         try{
+            System.err.println("Queue size: "+ commModel.getQueueSize());
             commModel.addResponseHandler(new CounterResponseHandler(this));
             commModel.write(Command.GET_COUNTER);
         }catch (SerialPortException e){
             e.printStackTrace();
             commModel.removeResponseHandlers();
         }
+    }
+
+    @FXML
+    private void readAngle(){
+        try{
+            commModel.addResponseHandler(new AngleResponseHandler(this));
+            commModel.write(Command.GET_ANGLE);
+        } catch (SerialPortException e) {
+            e.printStackTrace();
+            commModel.removeResponseHandlers();
+        }
+    }
+
+    @FXML
+    private void saveResultToFile(ActionEvent event){
+        ToggleButton source = (ToggleButton) event.getSource();
+
+        StringBuilder builder = new StringBuilder();
+        String direction = upButton.isSelected() ? "UP" : "DOWN";
+        String fileName = fileNameInput.getText();
+        fileName = fileName!= null && fileName.length() > 0? fileName : "result.txt";
+        fileNameInput.setText(fileName);
+        if(!downButton.isSelected() && !upButton.isSelected()) direction = "NONE";
+        builder.append("[")
+                .append(LocalDate.now())
+                .append(" ")
+                .append(LocalTime.now())
+                .append("]   N = ")
+                .append(impulseCountInput.getText())
+                .append(", F = ")
+                .append(freqInput.getText())
+                .append(" [Hz], C = ")
+                .append(counterTextArea.getText())
+                .append(", EL = ")
+                .append(angleTextArea.getText())
+                .append(", dir: ")
+                .append(direction);
+        Message<String> message = new MessageImpl<>(builder.toString());
+        FileSaver<String> fileSaver = new FileSaverStringImpl();
+
+        boolean state = fileSaver.writeToFile(new File(fileName), message);
+        saveFileLabel.setVisible(true);
+        if(state){
+            saveFileLabel.setText("Ok!");
+        }else saveFileLabel.setText("Error!");
+
+        source.setSelected(!state);
+
+        try {
+            Thread.sleep(1000);
+            source.setSelected(false);
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void initTooltips(){

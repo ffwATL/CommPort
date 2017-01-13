@@ -23,7 +23,7 @@ public class JsscCommModel extends CommAbstract {
     private static boolean firstStart = true;
 
     private boolean connected = false;
-    private Queue<ResponseHandler> responseHandlers = new ConcurrentLinkedQueue<>();
+    private static final Queue<ResponseHandler> responseHandlers = new ConcurrentLinkedQueue<>();
 
     static {
         dataParser = CommDataParser.getInstance();
@@ -55,13 +55,14 @@ public class JsscCommModel extends CommAbstract {
 
     @Override
     public void addResponseHandler(ResponseHandler responseHandler) {
-       /* this.responseHandler= responseHandler;*/
-        responseHandlers.add(responseHandler);
+        synchronized (responseHandlers){
+            responseHandlers.add(responseHandler);
+        }
     }
 
     @Override
     public void removeResponseHandlers() {
-        /*this.responseHandler=null;*/
+        /*this.handleResponse=null;*/
         responseHandlers.clear();
     }
 
@@ -82,18 +83,18 @@ public class JsscCommModel extends CommAbstract {
 
     @Override
     public void write(int[] msg) throws SerialPortException {
-
         try {
-            logger.info("acquiring a lock..");
-            synchronized (serialPort){
-                logger.info("Sending: " + Arrays.toString(msg));
-                serialPort.writeIntArray(msg);
-            }
-
+            /*logger.info("Sending: " + Arrays.toString(msg));*/
+            serialPort.writeIntArray(msg);
         }catch (SerialPortException e){
             logger.error(e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public int getQueueSize() {
+        return responseHandlers.size();
     }
 
     @Override
@@ -111,8 +112,7 @@ public class JsscCommModel extends CommAbstract {
         serialPort = null;
     }
 
-    private void responseHandler(int[] response){
-        /*responseHandler.handle(response);*/
+    private void handleResponse(int[] response){
         if(!responseHandlers.isEmpty()){
             responseHandlers.poll().handle(response);
         }
@@ -127,14 +127,23 @@ public class JsscCommModel extends CommAbstract {
             if(serialPortEvent.getEventValue() > 0){
                 try {
                     buffer = serialPort.readBytes();
-                    int[] response = new int[buffer.length];
+                    int[] response = new int[3];
+                    int r_counter = 0;
 
-                    for (int i=0; i< buffer.length; i++){
-                        int unsignedByte = buffer[i] & 0xFF;
-                        response[i] = unsignedByte;
+                    for (byte aBuffer : buffer) {
+                        int unsignedByte = aBuffer & 0xFF;
+
+                        response[r_counter++] = unsignedByte;
+
+                        if (r_counter == response.length) {
+                            synchronized (responseHandlers){
+                                handleResponse(response);
+                            }
+                            r_counter = 0;
+                        }
                     }
                     logger.info("response: "+ Arrays.toString(buffer));
-                    responseHandler(response);
+                   /* handleResponse(response);*/
 
                 } catch (SerialPortException e) {
                     logger.error("SerialPortException is occurred: " + e.getMessage());

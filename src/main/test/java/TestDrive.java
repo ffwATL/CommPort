@@ -15,9 +15,9 @@ public class TestDrive {
     }
 
     public static void main(String[]args) throws Exception {
-        Integer s1 = 0;
-        Integer s2 = 7;
-        Integer s3 = 208;
+        Integer s1 = 16;
+        Integer s2 = 244;
+        Integer s3 = 71;
 
         byte[] test = new byte[] {s1.byteValue(),s2.byteValue(), s3.byteValue()};
         int res = s1*256+s2*16+s3;
